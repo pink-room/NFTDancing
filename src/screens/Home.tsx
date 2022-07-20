@@ -1,36 +1,41 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {ipfsGet} from '@tatumio/tatum';
+import * as DocumentPicker from 'react-native-document-picker';
+import {API_KEY} from '../utils/constants';
+// import {ipfsDelete, ipfsUpload} from '@tatumio/tatum';
 
 export default function Home() {
     const handleUploadDocument = async () => {
-        const test = await ipfsGet(
-            'Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu',
-        );
-        console.log(test);
-        // const videoFile = await DocumentPicker.getDocumentAsync({
-        //     type: 'video/*',
-        //     copyToCacheDirectory: false,
-        // });
-        // if (videoFile.type === 'success') {
-        //     try {
-        //         const fetchResponse = await fetch(videoFile.uri);
-        //         console.log('fetchResponse', fetchResponse);
-        //         const blob = await fetchResponse.blob();
-        //         console.log('blob', blob);
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        //     // try {
-        //     // 	// const base64File = await FileSystem.readAsStringAsync(videoFile.uri, { encoding: EncodingType.Base64 })
-        //     // 	// const finalBase64 = `data:${videoFile.mimeType};base64,${base64File}`;
-        //     // 	await uploadToIPFS(videoFile.file);
-        //     // } catch (err) {
-        //     // 	console.log(err);
-        //     // 	// } finally () {
-        //     // 	// 	await getFromIPFS(test)
-        //     // }
-        // }
+        const file = await DocumentPicker.pickSingle({
+            type: DocumentPicker.types.video,
+        });
+        // const buffer = Buffer.from(file.fileCopyUri, 'base64');
+
+        const response = await fetch(file.uri);
+        const blob = await response.blob();
+
+        // console.log(blob);
+
+        const form = new FormData();
+        form.append('file', blob);
+
+        // console.log(form);
+
+        try {
+            const resp = await fetch('https://api-eu1.tatum.io/v3/ipfs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'x-api-key': API_KEY,
+                },
+                body: form,
+            });
+            // console.log(resp);
+            const data = await resp.text();
+            // console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (

@@ -11448,6 +11448,13 @@ react-native-crypto@^2.1.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
+react-native-document-picker@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.1.1.tgz#642bbe25752cc428b96416318f8dc07cef29ee10"
+  integrity sha512-mH0oghd7ndgU9/1meVJdqts1sAkOfUQW1qbrqTTsvR5f2K9r0BAj/X02dve5IBMOMZvlGd7qWrNVuIFg5AUXWg==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native-gradle-plugin@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.7.tgz#96602f909745239deab7b589443f14fce5da2056"

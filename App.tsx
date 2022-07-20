@@ -12,7 +12,6 @@ const {
 const {withWalletConnect} = require('@walletconnect/react-native-dapp');
 
 function App() {
-    process.env.TATUM_API_KEY = 'e59159ea-f508-41d2-80f7-28ae4204cd9b';
     return (
         <AuthContextProvider>
             <Routes />
