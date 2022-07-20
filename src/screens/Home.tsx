@@ -4,7 +4,9 @@ import {ipfsGet} from '@tatumio/tatum';
 
 export default function Home() {
     const handleUploadDocument = async () => {
-        const test = await ipfsGet('ipfs://oi');
+        const test = await ipfsGet(
+            'Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu',
+        );
         console.log(test);
         // const videoFile = await DocumentPicker.getDocumentAsync({
         //     type: 'video/*',
