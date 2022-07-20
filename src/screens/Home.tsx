@@ -1,8 +1,11 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {ipfsGet} from '@tatumio/tatum';
 
 export default function Home() {
     const handleUploadDocument = async () => {
+        const test = await ipfsGet('ipfs://oi');
+        console.log(test);
         // const videoFile = await DocumentPicker.getDocumentAsync({
         //     type: 'video/*',
         //     copyToCacheDirectory: false,

@@ -2,5 +2,6 @@
 	"extends": "@tsconfig/react-native/tsconfig.json",
 	"compilerOptions": {
 		"skipLibCheck": true,
-	}
+	},
+	"exclude": ["shim.js", "metro.config.js", "babel.config.js", "node_modules"],
 }
