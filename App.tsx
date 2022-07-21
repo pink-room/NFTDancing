@@ -1,8 +1,7 @@
 import React from 'react';
 
-import {Platform} from 'react-native';
-
 import {AuthContextProvider} from './src/contexts/AuthContext';
+import {Web3ContextProvider} from './src/contexts/Web3Context';
 
 import Routes from './src/routes';
 
@@ -14,14 +13,15 @@ const {withWalletConnect} = require('@walletconnect/react-native-dapp');
 function App() {
     return (
         <AuthContextProvider>
-            <Routes />
+            <Web3ContextProvider>
+                <Routes />
+            </Web3ContextProvider>
         </AuthContextProvider>
     );
 }
 
 export default withWalletConnect(App, {
-    redirectUrl:
-        Platform.OS === 'web' ? window.location.origin : 'nftdacing://',
+    redirectUrl: 'nftdacing://',
     storageOptions: {
         asyncStorage: AsyncStorage,
     },

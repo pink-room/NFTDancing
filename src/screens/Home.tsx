@@ -2,100 +2,67 @@ import React, {useState} from 'react';
 import {
     View,
     Text,
+    Alert,
     StyleSheet,
     TouchableOpacity,
-    Alert,
     ActivityIndicator,
 } from 'react-native';
-import * as DocumentPicker from 'react-native-document-picker';
-import IPFS from 'ipfs-mini';
-import RNFS from 'react-native-fs';
-import calculateSize from '../utils/calculateSizeInMB';
 import Video from 'react-native-video';
+import {useWeb3State} from '../contexts/Web3Context';
 
 export default function Home() {
-    const ipfs = new IPFS({
-        host: 'ipfs.infura.io',
-        port: 5001,
-        protocol: 'https',
-    });
-    const [loading, setLoading] = useState<boolean>(false);
-    const [myFile, setMyFile] = useState<string | null>(null);
+    const web3State = useWeb3State();
     const [ipfsHash, setIpfsHash] = useState<string | null>(null);
+    const [video, setVideo] = useState<string | null>(null);
     const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
 
-    const handleUploadDocument = async () => {
-        setLoading(true);
-        const file = await DocumentPicker.pickSingle({
-            type: DocumentPicker.types.video,
-            copyTo: 'documentDirectory',
-        });
+    const handleUploadVideo = async () => {
+        const hash = await web3State.actions.uploadToIpfs();
+        if (hash != null) {
+            setIpfsHash(hash);
+        } else {
+            Alert.alert('Error uploading video to IPFS');
+        }
 
-        // const buffer = Buffer.from(data, 'base64');
-        // const buffer = Buffer.from(file.fileCopyUri, 'base64');
-
-        RNFS.readFile(file.uri, 'base64').then(data => {
-            if (data != null) {
-                if (calculateSize(data) > 50) {
-                    Alert.alert(
-                        'File size is too large. Please select a file less than 35MB',
-                    );
-                }
-
-                ipfs.add(data).then((result: string) => {
-                    if (result != null) {
-                        setIpfsHash(result);
-                    } else {
-                        console.log('Error uploading to ipfs');
-                    }
-                    setLoading(false);
-                });
-            }
-        });
+        // Mint NFT with ipfs metadata
+        // const mint = await web3State.actions.mintDanceNFT(ipfsHash, ...);
     };
 
-    const handleGetVideo = () => {
+    const handleGetVideo = async () => {
         if (ipfsHash != null) {
-            setLoading(true);
-            ipfs.cat(ipfsHash, (err: any, result: any) => {
-                if (err == null && result != null) {
-                    RNFS.writeFile(
-                        RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`,
-                        result,
-                        'base64',
-                    ).then(() => {
-                        setMyFile(
-                            RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`,
-                        );
-                    });
-                } else {
-                    console.log('Error retrieving from ipfs', err);
-                }
-                setLoading(false);
-            });
+            const videoContent = await web3State.actions.retrieveFromIpfs(
+                ipfsHash,
+            );
+            if (videoContent != null) {
+                setVideo(videoContent);
+            } else {
+                Alert.alert('Error retrieving video from IPFS');
+            }
+        } else {
+            Alert.alert('Video not yet uploaded');
         }
     };
 
     return (
         <View style={styles.mainContainer}>
-            {loading ? (
+            {web3State.values.loading ? (
                 <ActivityIndicator />
             ) : (
                 <>
                     <Text>Create your own DanceMoove!</Text>
-                    <TouchableOpacity onPress={handleUploadDocument}>
+                    <TouchableOpacity onPress={handleUploadVideo}>
                         <Text>Import a dance</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleGetVideo}>
                         <Text>Get Uploaded Video</Text>
                     </TouchableOpacity>
-                    {myFile != null && (
+                    {video != null && (
                         <TouchableOpacity
                             onPress={() => setVideoPlaying(!videoPlaying)}
                             style={styles.videoContainer}>
                             <Video
                                 source={{
-                                    uri: myFile,
+                                    uri: video,
                                 }}
                                 paused={videoPlaying}
                                 style={styles.video}
