@@ -1,44 +1,27 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {ipfsGet} from '@tatumio/tatum';
+import {createContract} from '../api/createContract';
+import Config from 'react-native-config';
 
 export default function Home() {
-    const handleUploadDocument = async () => {
-        const test = await ipfsGet(
-            'Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu',
-        );
-        console.log(test);
-        // const videoFile = await DocumentPicker.getDocumentAsync({
-        //     type: 'video/*',
-        //     copyToCacheDirectory: false,
-        // });
-        // if (videoFile.type === 'success') {
-        //     try {
-        //         const fetchResponse = await fetch(videoFile.uri);
-        //         console.log('fetchResponse', fetchResponse);
-        //         const blob = await fetchResponse.blob();
-        //         console.log('blob', blob);
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        //     // try {
-        //     // 	// const base64File = await FileSystem.readAsStringAsync(videoFile.uri, { encoding: EncodingType.Base64 })
-        //     // 	// const finalBase64 = `data:${videoFile.mimeType};base64,${base64File}`;
-        //     // 	await uploadToIPFS(videoFile.file);
-        //     // } catch (err) {
-        //     // 	console.log(err);
-        //     // 	// } finally () {
-        //     // 	// 	await getFromIPFS(test)
-        //     // }
-        // }
+    const handleContractCreation = async () => {
+        console.log('CREATING CONTRACT...');
+        const transactionId = await createContract();
+        console.log('DEBUG transactionId -> ', transactionId);
     };
 
     return (
         <View style={styles.mainContainer}>
             <Text>Create your own DanceMoove!</Text>
-            <TouchableOpacity onPress={handleUploadDocument}>
-                <Text>Import a dance</Text>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={handleContractCreation}>
+                <Text style={styles.text}>Create Contract</Text>
             </TouchableOpacity>
+            <Text style={styles.text}>Config.API_KEY</Text>
+            {/* <TouchableOpacity onPress={handleUploadDocument}>
+                <Text>Import a dance</Text>
+            </TouchableOpacity> */}
         </View>
     );
 }
@@ -49,5 +32,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#e7a61a',
+    },
+    button: {
+        height: 40,
+        width: '60%',
+        borderColor: '#e7401a',
+        borderStyle: 'solid',
+        borderWidth: 2,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 12,
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: '700',
     },
 });
