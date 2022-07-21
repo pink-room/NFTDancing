@@ -1,27 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {createContract} from '../api/createContract';
-import Config from 'react-native-config';
+import {View, Text, StyleSheet} from 'react-native';
+// import {useAuthState} from '../contexts/AuthContext';
 
 export default function Home() {
-    const handleContractCreation = async () => {
-        console.log('CREATING CONTRACT...');
-        const transactionId = await createContract();
-        console.log('DEBUG transactionId -> ', transactionId);
-    };
+    // const authState = useAuthState();
 
     return (
         <View style={styles.mainContainer}>
             <Text>Create your own DanceMoove!</Text>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={handleContractCreation}>
-                <Text style={styles.text}>Create Contract</Text>
-            </TouchableOpacity>
-            <Text style={styles.text}>Config.API_KEY</Text>
-            {/* <TouchableOpacity onPress={handleUploadDocument}>
-                <Text>Import a dance</Text>
-            </TouchableOpacity> */}
         </View>
     );
 }
