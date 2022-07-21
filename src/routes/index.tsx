@@ -24,7 +24,7 @@ export default function Routes() {
     const BottomTabs = (): JSX.Element => (
         <TabStack.Navigator initialRouteName="CreateDance">
             <TabStack.Screen
-                name="CreateDance"
+                name="Create New Dance"
                 component={CreateDance}
                 options={{
                     tabBarIcon: (props: {
