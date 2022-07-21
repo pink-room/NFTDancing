@@ -19,9 +19,10 @@ export default function Home() {
         port: 5001,
         protocol: 'https',
     });
+    const [loading, setLoading] = useState<boolean>(false);
     const [myFile, setMyFile] = useState<string | null>(null);
     const [ipfsHash, setIpfsHash] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
 
     const handleUploadDocument = async () => {
         setLoading(true);
@@ -54,21 +55,25 @@ export default function Home() {
     };
 
     const handleGetVideo = () => {
-        setLoading(true);
-        ipfs.cat(ipfsHash, (err: any, result: any) => {
-            if (err == null && result != null) {
-                RNFS.writeFile(
-                    RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`,
-                    result,
-                    'base64',
-                ).then(() => {
-                    setMyFile(RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`);
-                });
-            } else {
-                console.log('Error retrieving from ipfs', err);
-            }
-            setLoading(false);
-        });
+        if (ipfsHash != null) {
+            setLoading(true);
+            ipfs.cat(ipfsHash, (err: any, result: any) => {
+                if (err == null && result != null) {
+                    RNFS.writeFile(
+                        RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`,
+                        result,
+                        'base64',
+                    ).then(() => {
+                        setMyFile(
+                            RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`,
+                        );
+                    });
+                } else {
+                    console.log('Error retrieving from ipfs', err);
+                }
+                setLoading(false);
+            });
+        }
     };
 
     return (
@@ -85,15 +90,20 @@ export default function Home() {
                         <Text>Get Uploaded Video</Text>
                     </TouchableOpacity>
                     {myFile != null && (
-                        <Video
-                            source={{
-                                uri: myFile,
-                            }}
-                            style={styles.backgroundVideo}
-                            // thumbnail={{
-                            //     uri: 'https://i.picsum.photos/id/866/1600/900.jpg',
-                            // }}
-                        />
+                        <TouchableOpacity
+                            onPress={() => setVideoPlaying(!videoPlaying)}
+                            style={styles.videoContainer}>
+                            <Video
+                                source={{
+                                    uri: myFile,
+                                }}
+                                paused={videoPlaying}
+                                style={styles.video}
+                                // thumbnail={{
+                                //     uri: 'https://i.picsum.photos/id/866/1600/900.jpg',
+                                // }}
+                            />
+                        </TouchableOpacity>
                     )}
                 </>
             )}
@@ -108,7 +118,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#e7a61a',
     },
-    backgroundVideo: {
+    videoContainer: {
+        width: '75%',
+        height: '75%',
+    },
+    video: {
         position: 'absolute',
         top: 0,
         left: 0,
