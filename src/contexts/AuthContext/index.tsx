@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useWalletConnect} from '@walletconnect/react-native-dapp';
 
 import {
@@ -16,6 +16,12 @@ function AuthContextProvider({
 }): JSX.Element {
     const connector = useWalletConnect();
     const [account, setAccount] = useState<string>('');
+
+    useEffect(() => {
+        if (connector.connected && connector.accounts != null) {
+            setAccount(connector.accounts[0]);
+        }
+    }, [connector]);
 
     const connectWallet = React.useCallback(() => {
         connector.connect().then(res => {
