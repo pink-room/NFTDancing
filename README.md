@@ -8,7 +8,7 @@ Run the following commands
 
  - `yarn install`
 
- - `./node_modules/.bin/rn-nodeify --yarn --install http,https,path,crypto,fs,stream --hack`
+ <!-- - `yarn postinstall` -->
 
  - iOS
 	- `cd ios && pod install`
