@@ -1,44 +1,79 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {ipfsGet} from '@tatumio/tatum';
+import React, {useState} from 'react';
+import {
+    View,
+    Text,
+    Alert,
+    StyleSheet,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
+import Video from 'react-native-video';
+import {useWeb3State} from '../contexts/Web3Context';
 
 export default function Home() {
-    const handleUploadDocument = async () => {
-        const test = await ipfsGet(
-            'Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu',
-        );
-        console.log(test);
-        // const videoFile = await DocumentPicker.getDocumentAsync({
-        //     type: 'video/*',
-        //     copyToCacheDirectory: false,
-        // });
-        // if (videoFile.type === 'success') {
-        //     try {
-        //         const fetchResponse = await fetch(videoFile.uri);
-        //         console.log('fetchResponse', fetchResponse);
-        //         const blob = await fetchResponse.blob();
-        //         console.log('blob', blob);
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        //     // try {
-        //     // 	// const base64File = await FileSystem.readAsStringAsync(videoFile.uri, { encoding: EncodingType.Base64 })
-        //     // 	// const finalBase64 = `data:${videoFile.mimeType};base64,${base64File}`;
-        //     // 	await uploadToIPFS(videoFile.file);
-        //     // } catch (err) {
-        //     // 	console.log(err);
-        //     // 	// } finally () {
-        //     // 	// 	await getFromIPFS(test)
-        //     // }
-        // }
+    const web3State = useWeb3State();
+    const [ipfsHash, setIpfsHash] = useState<string | null>(null);
+    const [video, setVideo] = useState<string | null>(null);
+    const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
+
+    const handleUploadVideo = async () => {
+        const hash = await web3State.actions.uploadToIpfs();
+        if (hash != null) {
+            setIpfsHash(hash);
+        } else {
+            Alert.alert('Error uploading video to IPFS');
+        }
+
+        // Mint NFT with ipfs metadata
+        // const mint = await web3State.actions.mintDanceNFT(ipfsHash, ...);
+    };
+
+    const handleGetVideo = async () => {
+        if (ipfsHash != null) {
+            const videoContent = await web3State.actions.retrieveFromIpfs(
+                ipfsHash,
+            );
+            if (videoContent != null) {
+                setVideo(videoContent);
+            } else {
+                Alert.alert('Error retrieving video from IPFS');
+            }
+        } else {
+            Alert.alert('Video not yet uploaded');
+        }
     };
 
     return (
         <View style={styles.mainContainer}>
-            <Text>Create your own DanceMoove!</Text>
-            <TouchableOpacity onPress={handleUploadDocument}>
-                <Text>Import a dance</Text>
-            </TouchableOpacity>
+            {web3State.values.loading ? (
+                <ActivityIndicator />
+            ) : (
+                <>
+                    <Text>Create your own DanceMoove!</Text>
+                    <TouchableOpacity onPress={handleUploadVideo}>
+                        <Text>Import a dance</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleGetVideo}>
+                        <Text>Get Uploaded Video</Text>
+                    </TouchableOpacity>
+                    {video != null && (
+                        <TouchableOpacity
+                            onPress={() => setVideoPlaying(!videoPlaying)}
+                            style={styles.videoContainer}>
+                            <Video
+                                source={{
+                                    uri: video,
+                                }}
+                                paused={videoPlaying}
+                                style={styles.video}
+                                // thumbnail={{
+                                //     uri: 'https://i.picsum.photos/id/866/1600/900.jpg',
+                                // }}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </>
+            )}
         </View>
     );
 }
@@ -49,5 +84,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#e7a61a',
+    },
+    videoContainer: {
+        width: '75%',
+        height: '75%',
+    },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
     },
 });
