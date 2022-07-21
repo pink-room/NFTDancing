@@ -30,7 +30,7 @@ function Web3ContextProvider({
 
         try {
             const selectedFile = await DocumentPicker.pickSingle({
-                type: DocumentPicker.types.video,
+                type: 'video/mp4',
                 copyTo: 'documentDirectory',
             });
 
@@ -46,6 +46,8 @@ function Web3ContextProvider({
                     Alert.alert(
                         'File size is too large. Please select a file less than 35MB',
                     );
+                    setLoading(false);
+                    return null;
                 }
 
                 const ipfsUpload = await ipfs.add(readFile);
