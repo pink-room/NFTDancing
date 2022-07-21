@@ -30,7 +30,7 @@ function Web3ContextProvider({
 
         try {
             const selectedFile = await DocumentPicker.pickSingle({
-                type: DocumentPicker.types.video,
+                type: 'video/mp4',
                 copyTo: 'documentDirectory',
             });
 
