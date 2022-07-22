@@ -9,15 +9,15 @@ export default function Authenticate() {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.content}>
-                <Text style={styles.title}>Welcome to</Text>
+                <Text style={styles.title}>Welcome to the</Text>
                 <Text style={[styles.title, styles.bold]}>
-                    DanceMooves Marketplace
+                    Dance NFT Marketplace
                 </Text>
             </View>
             <TouchableOpacity
                 onPress={authState.actions.connectWallet}
                 style={styles.buttonStyle}>
-                <Text style={styles.buttonTextStyle}>Connect a Wallet</Text>
+                <Text style={styles.buttonTextStyle}>Connect your Wallet</Text>
             </TouchableOpacity>
         </View>
     );

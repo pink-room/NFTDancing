@@ -25,19 +25,16 @@ function Web3ContextProvider({
     });
     const [loading, setLoading] = useState<boolean>(false);
 
-    const uploadToIpfs = async () => {
+    const uploadToIpfs = async (
+        fileObject: DocumentPicker.DocumentPickerResponse,
+    ) => {
         setLoading(true);
 
         try {
-            const selectedFile = await DocumentPicker.pickSingle({
-                type: 'video/mp4',
-                copyTo: 'documentDirectory',
-            });
-
             const readFile = await RNFS.readFile(
                 Platform.OS === 'ios'
-                    ? encodeURI(selectedFile.uri)
-                    : selectedFile.uri,
+                    ? encodeURI(fileObject.uri)
+                    : fileObject.uri,
                 'base64',
             );
 
@@ -85,15 +82,17 @@ function Web3ContextProvider({
         return null;
     };
 
-    const mintDanceNFT = async (ipfsHash: string) => {
+    const mintDanceNFT = async (_ipfsHash: string) => {
+        setLoading(true);
         // TODO
-        console.log('ipfsHash', ipfsHash);
+        // console.log('ipfsHash', ipfsHash);
+        setLoading(false);
         return null;
     };
 
-    const mintDanceUsageNFT = async (danceId: number) => {
+    const mintDanceUsageNFT = async (_danceId: number) => {
         // TODO
-        console.log('danceId', danceId);
+        // console.log('danceId', danceId);
         return null;
     };
 
@@ -102,9 +101,9 @@ function Web3ContextProvider({
         return null;
     };
 
-    const retrieveUsersDanceUsageNFTS = async (userAddress: string) => {
+    const retrieveUsersDanceUsageNFTS = async (_userAddress: string) => {
         // TODO
-        console.log('userAddress', userAddress);
+        // console.log('userAddress', userAddress);
         return null;
     };
 
