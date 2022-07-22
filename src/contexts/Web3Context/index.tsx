@@ -1,6 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {Alert, Platform} from 'react-native';
 
+import {useAuthState} from '../AuthContext';
+
 import * as DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import IPFS from 'ipfs-mini';
@@ -11,13 +13,17 @@ import {
     Web3Context,
     Web3ContextInterface,
 } from './context';
+
 import calculateSize from '../../utils/calculateSizeInMB';
+import {mintNFT} from '../../api/mintNFT';
 
 function Web3ContextProvider({
     children,
 }: {
     children: JSX.Element | JSX.Element[];
 }): JSX.Element {
+    const authState = useAuthState();
+
     const ipfs = new IPFS({
         host: 'ipfs.infura.io',
         port: 5001,
@@ -84,8 +90,12 @@ function Web3ContextProvider({
 
     const mintDanceNFT = async (_ipfsHash: string) => {
         setLoading(true);
-        // TODO
-        // console.log('ipfsHash', ipfsHash);
+        const mintTx = await mintNFT(
+            authState.values.account,
+            _ipfsHash,
+            authState.values.connector,
+        );
+        console.log('mintTx', mintTx);
         setLoading(false);
         return null;
     };

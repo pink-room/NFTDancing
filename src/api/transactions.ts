@@ -1,4 +1,25 @@
+import axios from 'axios';
 import {ITXConfig} from '../@types/Api';
+import {API_KEY} from '../utils/constants';
+
+async function getTXConfig(
+    signatureId: string,
+    address: string,
+): Promise<ITXConfig> {
+    const {data} = await axios.get(
+        'https://api-eu1.tatum.io/v3/kms/' + signatureId,
+        {
+            headers: {
+                'x-api-key': API_KEY,
+            },
+        },
+    );
+
+    let txConfig: ITXConfig = JSON.parse(data.serializedTransaction);
+    txConfig = prepareTxConfig(txConfig, address);
+
+    return txConfig;
+}
 
 function prepareTxConfig(txConfig: ITXConfig, address: string): ITXConfig {
     txConfig.from = address;
@@ -17,4 +38,4 @@ async function sendTransaction(
     return transactionHash;
 }
 
-export {prepareTxConfig, sendTransaction};
+export {getTXConfig, sendTransaction};

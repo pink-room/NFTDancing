@@ -3,7 +3,7 @@ import {SIGNATURE_ID, API_KEY} from '../utils/constants';
 import axios from 'axios';
 import {ITXConfig} from '../@types/Api';
 import timeout from '../utils/timeout';
-import {prepareTxConfig, sendTransaction} from './transactions';
+import {getTXConfig, sendTransaction} from './transactions';
 
 async function createContractApiCall(): Promise<string> {
     try {
@@ -36,25 +36,6 @@ async function createContractApiCall(): Promise<string> {
     }
 }
 
-async function getContractInfo(
-    signatureId: string,
-    address: string,
-): Promise<ITXConfig> {
-    const {data} = await axios.get(
-        'https://api-eu1.tatum.io/v3/kms/' + signatureId,
-        {
-            headers: {
-                'x-api-key': API_KEY,
-            },
-        },
-    );
-
-    let txConfig: ITXConfig = JSON.parse(data.serializedTransaction);
-    txConfig = prepareTxConfig(txConfig, address);
-
-    return txConfig;
-}
-
 async function getContractAddress(hash: string): Promise<string> {
     try {
         const contractInformation = await axios.get(
@@ -74,11 +55,11 @@ async function getContractAddress(hash: string): Promise<string> {
 }
 
 async function deployNftContract(
-    account: string,
+    accountAddress: string,
     connector: any,
 ): Promise<string> {
     const signatureId = await createContractApiCall();
-    const txConfig: ITXConfig = await getContractInfo(signatureId, account);
+    const txConfig: ITXConfig = await getTXConfig(signatureId, accountAddress);
     const transactionHash = await sendTransaction(connector, txConfig);
     await timeout(3000);
     const contractAddress = await getContractAddress(transactionHash);
