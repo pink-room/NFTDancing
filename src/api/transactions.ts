@@ -34,8 +34,13 @@ async function sendTransaction(
     connector: any,
     data: ITXConfig,
 ): Promise<string> {
-    const transactionHash = await connector.sendTransaction(data);
-    return transactionHash;
+    try {
+        const transactionHash = await connector.sendTransaction(data);
+        return transactionHash;
+    } catch (err) {
+        console.log('Error signing transaction: ', err);
+        return '';
+    }
 }
 
 export {getTXConfig, sendTransaction};

@@ -59,7 +59,7 @@ function Web3ContextProvider({
                     console.log('Error uploading to ipfs');
                 }
                 setLoading(false);
-                return ipfsUpload;
+                return `ipfs://${ipfsUpload}`;
             }
         } catch (err) {
             if (!DocumentPicker.isCancel(err)) {
@@ -90,11 +90,7 @@ function Web3ContextProvider({
 
     const mintDanceNFT = async (_ipfsHash: string) => {
         setLoading(true);
-        const mintTx = await mintNFT(
-            authState.values.account,
-            _ipfsHash,
-            authState.values.connector,
-        );
+        const mintTx = await mintNFT(authState.values.account, _ipfsHash);
         console.log('mintTx', mintTx);
         setLoading(false);
         return null;

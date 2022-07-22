@@ -9,5 +9,5 @@ export const SUPPORTED_CHAIN_IDS = [
     62320, // Baklava Testnet
 ];
 
-export const MAIN_CONTRACT_ADDRESS =
-    '0xaDCDbE4eAC9B9b7e10Bdde7FA81B111eA5EFE2F3';
+// export const MAIN_CONTRACT_ADDRESS =
+//     '0xaDCDbE4eAC9B9b7e10Bdde7FA81B111eA5EFE2F3';

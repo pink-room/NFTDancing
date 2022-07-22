@@ -50,8 +50,10 @@ export default function Home() {
                     <Text style={[styles.text, styles.title]}>
                         Create your own Dance NFT!
                     </Text>
-                    <TouchableOpacity onPress={handleUploadVideo}>
-                        <Text style={[styles.text, styles.content]}>
+                    <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={handleUploadVideo}>
+                        <Text style={styles.buttonTextStyle}>
                             Upload your dance video
                         </Text>
                     </TouchableOpacity>

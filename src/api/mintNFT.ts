@@ -1,8 +1,6 @@
 import {CeloMintErc721, Currency} from '@tatumio/tatum';
-import {SIGNATURE_ID, API_KEY, MAIN_CONTRACT_ADDRESS} from '../utils/constants';
+import {API_KEY} from '../utils/constants';
 import axios from 'axios';
-import {ITXConfig} from '../@types/Api';
-import {getTXConfig, sendTransaction} from './transactions';
 
 async function createMintApiCall(
     userAddress: string,
@@ -11,10 +9,9 @@ async function createMintApiCall(
     try {
         const contractMintRequest: CeloMintErc721 = {
             chain: Currency.CELO,
-            signatureId: SIGNATURE_ID,
             feeCurrency: Currency.CELO,
-            contractAddress: MAIN_CONTRACT_ADDRESS,
-            tokenId: '',
+            // tokenId: '1',
+            // contractAddress: MAIN_CONTRACT_ADDRESS,
             to: userAddress,
             url: ipfsHash,
         };
@@ -43,11 +40,8 @@ async function createMintApiCall(
 async function mintNFT(
     accountAddress: string,
     ipfsHash: string,
-    connector: any,
 ): Promise<string> {
-    const signatureId = await createMintApiCall(accountAddress, ipfsHash);
-    const txConfig: ITXConfig = await getTXConfig(signatureId, accountAddress);
-    const transactionHash = await sendTransaction(connector, txConfig);
+    const transactionHash = await createMintApiCall(accountAddress, ipfsHash);
     return transactionHash;
 }
 
