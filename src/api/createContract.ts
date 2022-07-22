@@ -56,7 +56,7 @@ async function getContractInfo(
 function prepareTxConfig(txConfig: ITXConfig, address: string): ITXConfig {
     txConfig.from = address;
     txConfig.gasPrice = txConfig.gasPrice
-        ? parseInt(txConfig.gasPrice).toString(16)
+        ? parseInt(txConfig.gasPrice, 10).toString(16)
         : undefined;
 
     return txConfig;
