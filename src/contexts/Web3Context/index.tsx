@@ -1,6 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {Alert, Platform} from 'react-native';
 
+import {useAuthState} from '../AuthContext';
+
 import * as DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import IPFS from 'ipfs-mini';
@@ -11,13 +13,17 @@ import {
     Web3Context,
     Web3ContextInterface,
 } from './context';
+
 import calculateSize from '../../utils/calculateSizeInMB';
+import {mintNFT} from '../../api/mintNFT';
 
 function Web3ContextProvider({
     children,
 }: {
     children: JSX.Element | JSX.Element[];
 }): JSX.Element {
+    const authState = useAuthState();
+
     const ipfs = new IPFS({
         host: 'ipfs.infura.io',
         port: 5001,
@@ -25,19 +31,16 @@ function Web3ContextProvider({
     });
     const [loading, setLoading] = useState<boolean>(false);
 
-    const uploadToIpfs = async () => {
+    const uploadToIpfs = async (
+        fileObject: DocumentPicker.DocumentPickerResponse,
+    ) => {
         setLoading(true);
 
         try {
-            const selectedFile = await DocumentPicker.pickSingle({
-                type: 'video/mp4',
-                copyTo: 'documentDirectory',
-            });
-
             const readFile = await RNFS.readFile(
                 Platform.OS === 'ios'
-                    ? encodeURI(selectedFile.uri)
-                    : selectedFile.uri,
+                    ? encodeURI(fileObject.uri)
+                    : fileObject.uri,
                 'base64',
             );
 
@@ -56,7 +59,7 @@ function Web3ContextProvider({
                     console.log('Error uploading to ipfs');
                 }
                 setLoading(false);
-                return ipfsUpload;
+                return `ipfs://${ipfsUpload}`;
             }
         } catch (err) {
             if (!DocumentPicker.isCancel(err)) {
@@ -85,15 +88,17 @@ function Web3ContextProvider({
         return null;
     };
 
-    const mintDanceNFT = async (ipfsHash: string) => {
-        // TODO
-        console.log('ipfsHash', ipfsHash);
+    const mintDanceNFT = async (_ipfsHash: string) => {
+        setLoading(true);
+        const mintTx = await mintNFT(authState.values.account, _ipfsHash);
+        console.log('mintTx', mintTx);
+        setLoading(false);
         return null;
     };
 
-    const mintDanceUsageNFT = async (danceId: number) => {
+    const mintDanceUsageNFT = async (_danceId: number) => {
         // TODO
-        console.log('danceId', danceId);
+        // console.log('danceId', danceId);
         return null;
     };
 
@@ -102,9 +107,9 @@ function Web3ContextProvider({
         return null;
     };
 
-    const retrieveUsersDanceUsageNFTS = async (userAddress: string) => {
+    const retrieveUsersDanceUsageNFTS = async (_userAddress: string) => {
         // TODO
-        console.log('userAddress', userAddress);
+        // console.log('userAddress', userAddress);
         return null;
     };
 
