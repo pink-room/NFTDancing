@@ -7,7 +7,7 @@ async function createMintApiCall(
     ipfsHash: string,
 ): Promise<string> {
     try {
-        const contractMintRequest: CeloMintErc721 = {
+        const mintNftRequest: CeloMintErc721 = {
             chain: Currency.CELO,
             feeCurrency: Currency.CELO,
             // tokenId: '1',
@@ -19,7 +19,7 @@ async function createMintApiCall(
         const response = await axios.post(
             'https://api-eu1.tatum.io/v3/nft/mint/',
             {
-                ...contractMintRequest,
+                ...mintNftRequest,
             },
             {
                 headers: {
