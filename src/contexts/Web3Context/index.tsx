@@ -73,9 +73,14 @@ function Web3ContextProvider({
     const retrieveFromIpfs = async (ipfsHash: string) => {
         setLoading(true);
         try {
-            const ipfsRetrieve = await ipfs.cat(ipfsHash);
+            // trim the hash to the right format
+            const trimmed = ipfsHash.slice(7);
+            const ipfsRetrieve = await ipfs.cat(trimmed);
+            const dumbName = 'OLAOLA';
+            // const ipfsRetrieve = await ipfs.cat(ipfsHash);
 
-            const filePath = RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`;
+            const filePath = RNFS.DocumentDirectoryPath + `/${dumbName}.mp4`;
+            console.log('File Path -> ', filePath);
 
             await RNFS.writeFile(filePath, ipfsRetrieve, 'base64');
 
