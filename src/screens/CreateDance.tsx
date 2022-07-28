@@ -73,7 +73,7 @@ export default function Home() {
 
                         <Text style={[styles.inputLabel]}>Description</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.inputDescription, styles.input]}
                             onChangeText={setDescription}
                             value={description}
                             placeholder="Description"
@@ -120,6 +120,9 @@ const styles = StyleSheet.create({
     inputText: {
         minHeight: 40,
     },
+    inputDescription: {
+        textAlignVertical: 'top',
+    },
     inputLabel: {
         fontSize: 16,
         fontWeight: '700',
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
     },
     label: {
-        fontSize: 8,
+        fontSize: 10,
         marginTop: -10,
     },
     buttonStyle: {
