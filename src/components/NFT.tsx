@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
     },
     nftContainer: {
-        width: '90%',
+        width: '100%',
         borderColor: 'white',
         borderRadius: 12,
         borderWidth: 1,

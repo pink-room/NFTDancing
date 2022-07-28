@@ -147,9 +147,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        /* position: 'absolute',
-        top: 32,
-        left: 24, */
         fontWeight: '700',
         marginBottom: 24,
         marginTop: 12,

@@ -46,7 +46,7 @@ export default function Profile() {
     };
 
     const shortenAddress = (address: string) => {
-        return `${address.slice(0, 6)}...${address.slice(
+        return `${address.slice(0, 8)}...${address.slice(
             address.length - 4,
             address.length,
         )}`;
@@ -68,22 +68,32 @@ export default function Profile() {
 
     return (
         <ScrollView style={styles.mainContainer}>
+            <View style={styles.headerContainer}>
+                <View style={styles.accountContainer}>
+                    <Text style={[styles.userAccount, styles.bold]}>
+                        Account
+                    </Text>
+                    <Text style={[styles.userAccount]}>
+                        {shortenAddress(authState.values.account)}
+                    </Text>
+
+                    <TouchableOpacity
+                        onPress={authState.actions.killSession}
+                        style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>Kill session</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.loadContainer}>
+                    <TouchableOpacity
+                        onPress={loadNfts}
+                        style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>LOAD NFTS</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <Text style={styles.title}>My Dance Moves</Text>
             <View style={styles.insideContainer}>
-                <Text style={[styles.userAccount, styles.bold]}>Account</Text>
-                <Text style={[styles.userAccount]}>
-                    {shortenAddress(authState.values.account)}
-                </Text>
-
-                <TouchableOpacity
-                    onPress={authState.actions.killSession}
-                    style={styles.buttonStyle}>
-                    <Text style={styles.buttonTextStyle}>Kill session</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={loadNfts} style={styles.buttonStyle}>
-                    <Text style={styles.buttonTextStyle}>LOAD NFTS</Text>
-                </TouchableOpacity>
-
                 {nfts?.map((nft: INFTResponse, index: number) => {
                     return (
                         <TouchableOpacity
@@ -109,11 +119,26 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
     nftTouchable: {width: '100%', display: 'flex', alignItems: 'center'},
+    accountContainer: {
+        width: '60%',
+        alignItems: 'flex-start',
+    },
+    loadContainer: {
+        justifyContent: 'flex-end',
+    },
     bold: {
         fontWeight: '700',
     },
+    headerContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 24,
+        marginBottom: 32,
+    },
     mainContainer: {
         backgroundColor: '#e7a61a',
+        paddingHorizontal: 24,
     },
     insideContainer: {
         flex: 1,
@@ -137,5 +162,12 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 20,
         fontWeight: '500',
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: '700',
+        marginBottom: 24,
+        marginTop: 12,
+        textAlign: 'left',
     },
 });
