@@ -1,14 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-// import { useAuthState } from '../contexts/AuthContext';
-
 export default function Marketplace() {
-    // const authState = useAuthState();
-
     return (
         <View style={styles.mainContainer}>
-            <Text>Marketplace</Text>
+            <Text style={styles.text}>FEATURE COMING SOON</Text>
         </View>
     );
 }
@@ -19,5 +15,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#e7a61a',
+    },
+    text: {
+        width: '70%',
+        fontSize: 28,
+        textAlign: 'center',
     },
 });
