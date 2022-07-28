@@ -9,37 +9,38 @@ import {
 
 import {listMyNFT} from '../api/listNFTs';
 import {useAuthState} from '../contexts/AuthContext';
-import {useWeb3State} from '../contexts/Web3Context';
 import {INFT} from '../@types/Api';
 import {useIsFocused} from '@react-navigation/native';
 import NFTModal from '../components/NFTModal';
 import NFT from '../components/NFT';
 
-import Video from 'react-native-video';
-
 export default function Profile() {
     const [nfts, setNfts] = useState<INFT[]>();
-    const [video, setVideo] = useState<string>();
+
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [selectedNFT, setSelectedNFT] = useState<INFT>();
     const authState = useAuthState();
-    const web3State = useWeb3State();
+
     const isFocused = useIsFocused();
 
     useEffect(() => {
         const load = async () => {
-            console.log('REQUESTING USER NFTS');
-            const userNfts = await listMyNFT(authState.values.account);
-            setNfts(userNfts);
+            try {
+                console.log('REQUESTING USER NFTS');
+                const userNfts = await listMyNFT(authState.values.account);
+                setNfts(userNfts);
 
-            console.log('REQUESTING COMPLETE');
-            console.log(userNfts[5].url);
+                console.log('REQUESTING COMPLETE');
+                console.log(userNfts[5].url);
+            } catch (err) {
+                console.log('ERROR RETRIEVING NFTS');
+            }
         };
 
         if (isFocused && !nfts) {
             load();
         }
-    }, [isFocused, nfts]);
+    }, [isFocused, nfts, authState.values.account]);
 
     const loadNfts = async () => {
         console.log('REQUESTING USER NFTS');
@@ -49,33 +50,6 @@ export default function Profile() {
         console.log('REQUESTING COMPLETE');
         console.log(userNfts[5].url);
     };
-
-    /* useEffect(() => {
-        const loadFromIpfs = async () => {
-            console.log('STARTED LOADING FROM IPFS');
-            if (nfts && nfts.length > 0) {
-                console.log('HAS NFTS AND WILL MAKE THE RETRIEVING REQUEST');
-                const fileLocation = await web3State.actions.retrieveFromIpfs(
-                    nfts[1].url,
-                );
-                if (fileLocation !== null) {
-                    setVideo(fileLocation);
-                }
-                console.log('HAS SET THE PATH ON MEMORY');
-            }
-            console.log('END LOADING FROM IPFS AND IS IN MEMORY');
-        };
-
-        loadFromIpfs();
-    }, [nfts]); */
-
-    /* const handleLoadFromIPFS = async () => {
-        const filePath = await web3State.actions.retrieveFromIpfs('');
-        console.log('FILEPATH -> ', filePath);
-        if (filePath) {
-            setVideo(filePath);
-        }
-    }; */
 
     const shortenAddress = (address: string) => {
         return `${address.slice(0, 6)}...${address.slice(
@@ -119,8 +93,11 @@ export default function Profile() {
 
                 {nfts?.map((nft: INFT, index: number) => {
                     return (
-                        <TouchableOpacity onPress={() => nftClicked(nft)}>
-                            <NFT key={index} nft={nft} />
+                        <TouchableOpacity
+                            key={index}
+                            onPress={() => nftClicked(nft)}
+                            style={styles.nftTouchable}>
+                            <NFT nft={nft} />
                         </TouchableOpacity>
                     );
                 })}
@@ -138,6 +115,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+    nftTouchable: {width: '100%', display: 'flex', alignItems: 'center'},
     bold: {
         fontWeight: '700',
     },

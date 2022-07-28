@@ -35,7 +35,7 @@ export default function NFTModal({
         };
 
         loadFromIpfs();
-    }, [nft]);
+    }, [nft, web3State.actions]);
 
     return (
         <Modal
@@ -50,7 +50,7 @@ export default function NFTModal({
                 {videoLocation && (
                     <Video
                         source={{uri: videoLocation}}
-                        style={{width: 300, height: 300}}
+                        style={styles.video}
                         controls={true}
                     />
                 )}
@@ -81,5 +81,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: 'white',
         fontWeight: '700',
+    },
+    video: {
+        width: 300,
+        height: 300,
     },
 });
