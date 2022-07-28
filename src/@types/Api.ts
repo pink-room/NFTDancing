@@ -6,7 +6,7 @@ export interface ITXConfig {
     gasLimit?: string;
 }
 
-export interface NFT {
+export interface INFT {
     metadata: string | null;
     tokenId: string;
     url: string;
