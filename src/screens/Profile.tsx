@@ -1,10 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+import {listMyNFT} from '../api/listNFTs';
 import {useAuthState} from '../contexts/AuthContext';
+import {NFT} from '../@types/Api';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function Profile() {
+    const [nfts, setNfts] = useState<NFT[]>();
+
     const authState = useAuthState();
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        const load = async () => {
+            console.log('REQUESTING USER NFTS');
+            const userNfts = await listMyNFT(authState.values.account);
+            setNfts(userNfts);
+            console.log('REQUESTING COMPLETE');
+        };
+
+        if (isFocused) {
+            load();
+        }
+    }, [isFocused]);
 
     const shortenAddress = (address: string) => {
         return `${address.slice(0, 6)}...${address.slice(
@@ -24,6 +43,8 @@ export default function Profile() {
                 style={styles.buttonStyle}>
                 <Text style={styles.buttonTextStyle}>Kill session</Text>
             </TouchableOpacity>
+
+            <Text style={styles.userAccount}>{nfts?.length}</Text>
         </View>
     );
 }

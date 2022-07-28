@@ -5,3 +5,9 @@ export interface ITXConfig {
     gasPrice?: string;
     gasLimit?: string;
 }
+
+export interface NFT {
+    metadata: string | null;
+    tokenId: string;
+    url: string;
+}
