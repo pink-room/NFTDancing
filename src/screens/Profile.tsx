@@ -12,6 +12,8 @@ export default function Profile() {
     const authState = useAuthState();
     const isFocused = useIsFocused();
 
+    const aux = ['a', 'b', 'c'];
+
     useEffect(() => {
         const load = async () => {
             console.log('REQUESTING USER NFTS');
@@ -38,13 +40,23 @@ export default function Profile() {
             <Text style={[styles.userAccount]}>
                 {shortenAddress(authState.values.account)}
             </Text>
+
             <TouchableOpacity
                 onPress={authState.actions.killSession}
                 style={styles.buttonStyle}>
                 <Text style={styles.buttonTextStyle}>Kill session</Text>
             </TouchableOpacity>
 
-            <Text style={styles.userAccount}>{nfts?.length}</Text>
+            {nfts && <Text> tamanho: {nfts[1].tokenId}</Text>}
+
+            {nfts?.map((nft: NFT, index: number) => {
+                return (
+                    <View key={index}>
+                        <Text>{index + 1}</Text>
+                        <Text>{nft.tokenId}</Text>
+                    </View>
+                );
+            })}
         </View>
     );
 }
