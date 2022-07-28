@@ -27,9 +27,11 @@ export default function Home() {
     const handleMintNFT = async () => {
         if (video != null) {
             const ipfsHash = await web3State.actions.uploadToIpfs(video);
+            console.log('IPFD Hash -> ', ipfsHash);
             if (ipfsHash != null) {
-                const mint = await web3State.actions.mintDanceNFT(ipfsHash);
-                if (mint != null) {
+                const txId = await web3State.actions.mintDanceNFT(ipfsHash);
+                console.log('txID CreateDance -> ', txId);
+                if (txId !== null && txId !== '') {
                     Alert.alert('Success', 'Dance NFT minted');
                     setVideo(null);
                 } else {
