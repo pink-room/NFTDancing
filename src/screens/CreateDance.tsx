@@ -6,12 +6,17 @@ import {
     StyleSheet,
     TouchableOpacity,
     ActivityIndicator,
+    TextInput,
+    ScrollView,
 } from 'react-native';
 import * as DocumentPicker from 'react-native-document-picker';
 import {useWeb3State} from '../contexts/Web3Context';
 
 export default function Home() {
     const web3State = useWeb3State();
+
+    const [name, setName] = useState<string>();
+    const [description, setDescription] = useState<string>();
     const [video, setVideo] =
         useState<DocumentPicker.DocumentPickerResponse | null>(null);
 
@@ -25,12 +30,16 @@ export default function Home() {
     };
 
     const handleMintNFT = async () => {
-        if (video != null) {
-            const ipfsHash = await web3State.actions.uploadToIpfs(video);
-            console.log('IPFD Hash -> ', ipfsHash);
+        if (video != null && name && description) {
+            const ipfsHash = await web3State.actions.uploadToIpfs(
+                video,
+                name,
+                description,
+            );
+
             if (ipfsHash != null) {
                 const txId = await web3State.actions.mintDanceNFT(ipfsHash);
-                console.log('txID CreateDance -> ', txId);
+
                 if (txId !== null && txId !== '') {
                     Alert.alert('Success', 'Dance NFT minted');
                     setVideo(null);
@@ -44,46 +53,85 @@ export default function Home() {
     };
 
     return (
-        <View style={styles.mainContainer}>
-            {web3State.values.loading ? (
-                <ActivityIndicator />
-            ) : (
-                <>
-                    <Text style={[styles.text, styles.title]}>
-                        Create your own Dance NFT!
-                    </Text>
-                    <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={handleUploadVideo}>
-                        <Text style={styles.buttonTextStyle}>
-                            Upload your dance video
+        <ScrollView style={styles.scrollContainer}>
+            <View style={styles.mainContainer}>
+                {web3State.values.loading ? (
+                    <ActivityIndicator />
+                ) : (
+                    <>
+                        <Text style={[styles.text, styles.title]}>
+                            Create your own Dance NFT!
                         </Text>
-                    </TouchableOpacity>
-                    <Text style={[styles.text, styles.label]}>
-                        It should not be greater than 35MB
-                    </Text>
 
-                    <View style={styles.videoNameContainer}>
-                        {video != null && <Text>{video.name}</Text>}
-                    </View>
-                    <TouchableOpacity
-                        disabled={video == null}
-                        style={styles.buttonStyle}
-                        onPress={handleMintNFT}>
-                        <Text style={styles.buttonTextStyle}>Mint NFT</Text>
-                    </TouchableOpacity>
-                </>
-            )}
-        </View>
+                        <Text style={[styles.inputLabel]}>Name of The NFT</Text>
+                        <TextInput
+                            style={[styles.input, styles.inputText]}
+                            onChangeText={setName}
+                            value={name}
+                            placeholder="NFT Placeholder"
+                        />
+
+                        <Text style={[styles.inputLabel]}>Description</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setDescription}
+                            value={description}
+                            placeholder="Description"
+                            multiline
+                            numberOfLines={5}
+                        />
+
+                        <Text style={[styles.inputLabel]}>Video to Upload</Text>
+                        <TouchableOpacity onPress={handleUploadVideo}>
+                            <Text
+                                style={
+                                    video
+                                        ? [styles.text, styles.input]
+                                        : styles.input
+                                }>
+                                {video ? video.name : 'Select Video'}
+                            </Text>
+                            <Text style={[styles.text, styles.label]}>
+                                It should not be greater than 35MB
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            disabled={video == null}
+                            style={styles.buttonStyle}
+                            onPress={handleMintNFT}>
+                            <Text style={styles.buttonTextStyle}>Mint NFT</Text>
+                        </TouchableOpacity>
+                    </>
+                )}
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+    input: {
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+        borderColor: '#ccc',
+        marginBottom: 12,
+    },
+    inputText: {
+        minHeight: 40,
+    },
+    inputLabel: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: 'white',
+        marginBottom: 6,
+    },
+    scrollContainer: {
         backgroundColor: '#e7a61a',
+    },
+    mainContainer: {
+        paddingHorizontal: 24,
+        justifyContent: 'center',
     },
     videoNameContainer: {
         padding: 12,
@@ -96,31 +144,28 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#ffffff',
-        textAlign: 'center',
     },
     title: {
         fontSize: 30,
-        position: 'absolute',
-        top: 32,
-    },
-    content: {
-        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 24,
         marginTop: 12,
     },
     label: {
         fontSize: 8,
+        marginTop: -10,
     },
     buttonStyle: {
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderColor: '#ffffff',
-        borderRadius: 8,
+        padding: 10,
+        borderColor: '#fff',
+        borderRadius: 10,
         borderWidth: 2,
-        marginTop: 32,
+        marginTop: 24,
     },
     buttonTextStyle: {
         color: '#ffffff',
         fontSize: 20,
-        fontWeight: '500',
+        fontWeight: '700',
+        textAlign: 'center',
     },
 });

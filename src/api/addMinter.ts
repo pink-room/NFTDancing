@@ -39,15 +39,10 @@ export async function addMinter(): Promise<string> {
             },
         );
 
-        console.log('MINT RESPONSE');
-        console.log(response);
         const {txId} = response.data;
 
         return txId;
     } catch (err) {
-        console.log('ERRO addMinter');
-        console.log(err.toJSON());
-
         return '';
     }
 }
@@ -61,8 +56,7 @@ export async function addNFTMinter(
         signatureId,
         accountAddress,
     );
-    console.log('DEBUG TXCONFIG');
-    console.log(txConfig);
+
     if (txConfig) {
         const transactionHash = await sendTransaction(connector, txConfig);
         return transactionHash;

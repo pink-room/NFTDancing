@@ -16,6 +16,7 @@ import {
 
 import calculateSize from '../../utils/calculateSizeInMB';
 import {mintNFT} from '../../api/mintNFT';
+import {IMetadata} from '../../@types/NFT';
 
 function Web3ContextProvider({
     children,
@@ -31,8 +32,34 @@ function Web3ContextProvider({
     });
     const [loading, setLoading] = useState<boolean>(false);
 
+    const uploadObjectToIpfs = async (
+        metadata: IMetadata,
+    ): Promise<string | null> => {
+        const ipfsUpload = await ipfs.addJSON(metadata);
+
+        if (ipfsUpload == null) {
+            console.log('Error uploading to ipfs');
+            return null;
+        }
+
+        return ipfsUpload;
+    };
+
+    const uploadVideoToIPFS = async (videoBase64: string): Promise<string> => {
+        try {
+            const videoIpfsHash = await ipfs.add(videoBase64);
+            return videoIpfsHash;
+        } catch (error) {
+            console.log(error);
+            throw new Error('');
+        }
+    };
+
+    // This method will upload the video to IPFS and then upload the metadata info to IPFS
     const uploadToIpfs = async (
         fileObject: DocumentPicker.DocumentPickerResponse,
+        nftName: string,
+        nftDescription: string,
     ) => {
         setLoading(true);
 
@@ -53,13 +80,25 @@ function Web3ContextProvider({
                     return null;
                 }
 
-                const ipfsUpload = await ipfs.add(readFile);
+                const videoIpfsHash = await uploadVideoToIPFS(readFile);
 
-                if (ipfsUpload == null) {
-                    console.log('Error uploading to ipfs');
+                // const ipfsUpload = await ipfs.add(readFile);
+
+                if (videoIpfsHash == null) {
+                    console.log('Error uploading video to ipfs');
+                    return null;
                 }
+
+                const metadata = {
+                    name: nftName,
+                    description: nftDescription,
+                    video: videoIpfsHash,
+                };
+
+                const metadataHash = await uploadObjectToIpfs(metadata);
+
                 setLoading(false);
-                return `ipfs://${ipfsUpload}`;
+                return `ipfs://${metadataHash}`;
             }
         } catch (err) {
             if (!DocumentPicker.isCancel(err)) {
@@ -73,14 +112,9 @@ function Web3ContextProvider({
     const retrieveFromIpfs = async (ipfsHash: string) => {
         setLoading(true);
         try {
-            // trim the hash to the right format
-            const trimmed = ipfsHash.slice(7);
-            const ipfsRetrieve = await ipfs.cat(trimmed);
-            const dumbName = 'OLAOLA';
-            // const ipfsRetrieve = await ipfs.cat(ipfsHash);
+            const ipfsRetrieve = await ipfs.cat(ipfsHash);
 
-            const filePath = RNFS.DocumentDirectoryPath + `/${dumbName}.mp4`;
-            console.log('File Path -> ', filePath);
+            const filePath = RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`;
 
             await RNFS.writeFile(filePath, ipfsRetrieve, 'base64');
 
@@ -100,23 +134,6 @@ function Web3ContextProvider({
         return mintTx;
     };
 
-    const mintDanceUsageNFT = async (_danceId: number) => {
-        // TODO
-        // console.log('danceId', danceId);
-        return null;
-    };
-
-    const retrieveAllDanceNFTS = async () => {
-        // TODO
-        return null;
-    };
-
-    const retrieveUsersDanceUsageNFTS = async (_userAddress: string) => {
-        // TODO
-        // console.log('userAddress', userAddress);
-        return null;
-    };
-
     return (
         <Web3Provider
             value={{
@@ -124,12 +141,10 @@ function Web3ContextProvider({
                     loading,
                 },
                 actions: {
+                    uploadObjectToIpfs,
                     uploadToIpfs,
                     retrieveFromIpfs,
                     mintDanceNFT,
-                    mintDanceUsageNFT,
-                    retrieveAllDanceNFTS,
-                    retrieveUsersDanceUsageNFTS,
                 },
             }}>
             {children}

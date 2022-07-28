@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {Modal, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {INFT} from '../@types/Api';
+
 import {useWeb3State} from '../contexts/Web3Context';
 
 import Video from 'react-native-video';
+import {IMetadata} from '../@types/NFT';
 
 interface NFTModalProps {
     modalVisible: boolean;
-    nft?: INFT;
+    nft?: IMetadata;
     closeModal(): void;
 }
 
@@ -23,10 +24,8 @@ export default function NFTModal({
         const loadFromIpfs = async () => {
             if (nft) {
                 const fileLocation = await web3State.actions.retrieveFromIpfs(
-                    nft.url,
+                    nft.video,
                 );
-                console.log('File Location');
-                console.log(fileLocation);
 
                 if (fileLocation !== null) {
                     setVideoLocation(fileLocation);
@@ -35,7 +34,7 @@ export default function NFTModal({
         };
 
         loadFromIpfs();
-    }, [nft, web3State.actions]);
+    }, []);
 
     return (
         <Modal
@@ -44,15 +43,17 @@ export default function NFTModal({
             visible={modalVisible}
             onRequestClose={() => closeModal()}>
             <View style={styles.centeredView}>
-                <Text>OLA ANDRE</Text>
-                <Text>{nft?.tokenId}</Text>
+                <Text style={styles.name}>{nft?.name}</Text>
+                <Text style={styles.description}>{nft?.description}</Text>
 
                 {videoLocation && (
-                    <Video
-                        source={{uri: videoLocation}}
-                        style={styles.video}
-                        controls={true}
-                    />
+                    <View style={styles.videoContainer}>
+                        <Video
+                            source={{uri: videoLocation}}
+                            style={styles.video}
+                            controls={true}
+                        />
+                    </View>
                 )}
 
                 <TouchableOpacity
@@ -68,9 +69,8 @@ export default function NFTModal({
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red',
+        padding: 24,
+        backgroundColor: '#e7a61a',
     },
     closeButton: {
         position: 'absolute',
@@ -82,8 +82,22 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '700',
     },
+    description: {
+        fontSize: 16,
+        marginTop: 12,
+    },
+    name: {
+        fontSize: 22,
+        fontWeight: '700',
+        color: 'white',
+        marginTop: 48,
+    },
     video: {
-        width: 300,
-        height: 300,
+        width: '60%',
+        height: 400,
+        marginTop: 72,
+    },
+    videoContainer: {
+        alignItems: 'center',
     },
 });
