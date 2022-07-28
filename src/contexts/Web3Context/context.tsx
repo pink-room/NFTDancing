@@ -1,21 +1,20 @@
 import * as React from 'react';
 import * as DocumentPicker from 'react-native-document-picker';
+import {IMetadata} from '../../@types/NFT';
 
 export interface Web3ContextInterface {
     values: {
         loading: boolean;
     };
     actions: {
+        uploadObjectToIpfs: (metadata: IMetadata) => Promise<string | null>;
         uploadToIpfs: (
             fileObject: DocumentPicker.DocumentPickerResponse,
+            nftName: string,
+            nftDescription: string,
         ) => Promise<string | null>;
         retrieveFromIpfs: (ipfsHash: string) => Promise<string | null>;
         mintDanceNFT: (ipfsHash: string) => Promise<string | null>;
-        mintDanceUsageNFT: (dance: number) => Promise<string | null>;
-        retrieveAllDanceNFTS: () => Promise<string | null>;
-        retrieveUsersDanceUsageNFTS: (
-            userAddress: string,
-        ) => Promise<string | null>;
     };
 }
 

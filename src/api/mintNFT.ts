@@ -6,6 +6,7 @@ import {
 } from '../utils/constants';
 import axios from 'axios';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function mintNFTCustomContract(
     userAddress: string,
     ipfsHash: string,
@@ -33,9 +34,6 @@ async function mintNFTCustomContract(
                 },
             },
         );
-
-        console.log('MINT RESPONSE');
-        console.log(response);
         const {txId} = response.data;
 
         return txId;

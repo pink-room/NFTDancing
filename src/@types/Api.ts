@@ -5,9 +5,3 @@ export interface ITXConfig {
     gasPrice?: string;
     gasLimit?: string;
 }
-
-export interface INFT {
-    metadata: string | null;
-    tokenId: string;
-    url: string;
-}

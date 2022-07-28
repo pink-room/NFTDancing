@@ -1,21 +1,36 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {INFT} from '../@types/Api';
+
+import {INFTResponse} from '../api/@types/NFTResponse';
 
 interface NFTProps {
-    nft: INFT;
+    nft: INFTResponse;
 }
 
 export default function NFT({nft}: NFTProps) {
+    const shortenDescription = (description: string) => {
+        if (description.length < 128) {
+            return description;
+        }
+        const trimmedDescription = description.slice(125);
+        return trimmedDescription + '...';
+    };
+
     return (
         <View style={styles.nftContainer}>
-            <Text>{nft.tokenId}</Text>
-            <Text>{nft.url}</Text>
+            <Text style={styles.name}>{nft.metadata.name}</Text>
+            <Text>{shortenDescription(nft.metadata.description)}</Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    name: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: 'white',
+        marginBottom: 6,
+    },
     nftContainer: {
         width: '90%',
         borderColor: 'white',

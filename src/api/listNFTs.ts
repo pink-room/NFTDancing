@@ -1,9 +1,11 @@
 import {Currency} from '@tatumio/tatum';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {TATUM_CUSTOM_CONTRACT_ADDRESS, PAID_API_KEY} from '../utils/constants';
 import axios from 'axios';
-import { NFT } from '../@types/Api';
+import {INFTResponse} from './@types/NFTResponse';
 
-export async function listAllNFT() {
+// Code that we didn't used, because we couldn't deploy and mint in our custom Smart Contract
+/* export async function listAllNFT() {
     try {
         const query = new URLSearchParams({
             pageSize: '10',
@@ -23,15 +25,14 @@ export async function listAllNFT() {
                 },
             },
         );
-
-        console.log('RESPONSE');
-        console.log(response);
     } catch (error) {
         console.log(error);
     }
-}
+} */
 
-export async function listMyNFT(accountAddress: string): NFT[] {
+export async function listMyNFT(
+    accountAddress: string,
+): Promise<INFTResponse[]> {
     const requestData = {
         chain: Currency.CELO,
     };

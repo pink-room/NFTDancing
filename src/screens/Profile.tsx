@@ -9,16 +9,18 @@ import {
 
 import {listMyNFT} from '../api/listNFTs';
 import {useAuthState} from '../contexts/AuthContext';
-import {INFT} from '../@types/Api';
 import {useIsFocused} from '@react-navigation/native';
 import NFTModal from '../components/NFTModal';
 import NFT from '../components/NFT';
+import {INFTResponse} from '../api/@types/NFTResponse';
+import {extractNFT} from '../utils/utils';
+import {IMetadata} from '../@types/NFT';
 
 export default function Profile() {
-    const [nfts, setNfts] = useState<INFT[]>();
+    const [nfts, setNfts] = useState<INFTResponse[]>();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [selectedNFT, setSelectedNFT] = useState<INFT>();
+    const [selectedNFT, setSelectedNFT] = useState<IMetadata>();
     const authState = useAuthState();
 
     const isFocused = useIsFocused();
@@ -26,12 +28,8 @@ export default function Profile() {
     useEffect(() => {
         const load = async () => {
             try {
-                console.log('REQUESTING USER NFTS');
                 const userNfts = await listMyNFT(authState.values.account);
                 setNfts(userNfts);
-
-                console.log('REQUESTING COMPLETE');
-                console.log(userNfts[5].url);
             } catch (err) {
                 console.log('ERROR RETRIEVING NFTS');
             }
@@ -43,12 +41,8 @@ export default function Profile() {
     }, [isFocused, nfts, authState.values.account]);
 
     const loadNfts = async () => {
-        console.log('REQUESTING USER NFTS');
         const userNfts = await listMyNFT(authState.values.account);
         setNfts(userNfts);
-
-        console.log('REQUESTING COMPLETE');
-        console.log(userNfts[5].url);
     };
 
     const shortenAddress = (address: string) => {
@@ -66,10 +60,9 @@ export default function Profile() {
         setModalVisible(true);
     };
 
-    const nftClicked = (nft: INFT) => {
-        console.log('CARREGOR NUM NFT');
-        console.log(nft);
-        setSelectedNFT(nft);
+    const nftClicked = (nft: INFTResponse) => {
+        const nftMetadata = extractNFT(nft);
+        setSelectedNFT(nftMetadata);
         showModal();
     };
 
@@ -91,7 +84,7 @@ export default function Profile() {
                     <Text style={styles.buttonTextStyle}>LOAD NFTS</Text>
                 </TouchableOpacity>
 
-                {nfts?.map((nft: INFT, index: number) => {
+                {nfts?.map((nft: INFTResponse, index: number) => {
                     return (
                         <TouchableOpacity
                             key={index}
