@@ -1,24 +1,30 @@
 import axios from 'axios';
 import {ITXConfig} from '../@types/Api';
-import {API_KEY} from '../utils/constants';
+import {PAID_API_KEY} from '../utils/constants';
 
 async function getTXConfig(
     signatureId: string,
     address: string,
-): Promise<ITXConfig> {
-    const {data} = await axios.get(
-        'https://api-eu1.tatum.io/v3/kms/' + signatureId,
-        {
-            headers: {
-                'x-api-key': API_KEY,
+): Promise<ITXConfig | null> {
+    try {
+        const {data} = await axios.get(
+            'https://api-eu1.tatum.io/v3/kms/' + signatureId,
+            {
+                headers: {
+                    'x-api-key': PAID_API_KEY,
+                },
             },
-        },
-    );
+        );
 
-    let txConfig: ITXConfig = JSON.parse(data.serializedTransaction);
-    txConfig = prepareTxConfig(txConfig, address);
+        let txConfig: ITXConfig = JSON.parse(data.serializedTransaction);
+        txConfig = prepareTxConfig(txConfig, address);
 
-    return txConfig;
+        return txConfig;
+    } catch (err) {
+        console.log('ERRO getTXConfig: ');
+        console.log(err.toJSON());
+        return null;
+    }
 }
 
 function prepareTxConfig(txConfig: ITXConfig, address: string): ITXConfig {
@@ -38,7 +44,8 @@ async function sendTransaction(
         const transactionHash = await connector.sendTransaction(data);
         return transactionHash;
     } catch (err) {
-        console.log('Error signing transaction: ', err);
+        console.log('Error signing transaction: ');
+        console.log(err.toJSON());
         return '';
     }
 }

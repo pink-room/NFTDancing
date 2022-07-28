@@ -88,12 +88,11 @@ function Web3ContextProvider({
         return null;
     };
 
-    const mintDanceNFT = async (ipfsHash: string) => {
+    const mintDanceNFT = async (ipfsHash: string): Promise<string> => {
         setLoading(true);
         const mintTx = await mintNFT(authState.values.account, ipfsHash);
-        console.log(mintTx);
         setLoading(false);
-        return null;
+        return mintTx;
     };
 
     const mintDanceUsageNFT = async (_danceId: number) => {

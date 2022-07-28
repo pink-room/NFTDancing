@@ -1,6 +1,51 @@
 import {CeloMintErc721, Currency} from '@tatumio/tatum';
-import {API_KEY} from '../utils/constants';
+import {
+    PAID_API_KEY,
+    CELO_NFT_MINTER,
+    TATUM_CUSTOM_CONTRACT_ADDRESS,
+} from '../utils/constants';
 import axios from 'axios';
+
+async function mintNFTCustomContract(
+    userAddress: string,
+    ipfsHash: string,
+): Promise<string> {
+    try {
+        const mintNftRequest: CeloMintErc721 = {
+            to: userAddress,
+            url: ipfsHash,
+            minter: CELO_NFT_MINTER,
+            contractAddress: TATUM_CUSTOM_CONTRACT_ADDRESS,
+            tokenId: '1',
+            chain: Currency.CELO,
+            feeCurrency: Currency.CELO,
+        };
+
+        const response = await axios.post(
+            'https://api-eu1.tatum.io/v3/nft/mint/',
+            {
+                ...mintNftRequest,
+            },
+            {
+                headers: {
+                    'x-api-key': PAID_API_KEY,
+                    'Content-Type': 'application/json',
+                },
+            },
+        );
+
+        console.log('MINT RESPONSE');
+        console.log(response);
+        const {txId} = response.data;
+
+        return txId;
+    } catch (err) {
+        console.log('ERRO mintNFTCustomContract');
+        console.log(err.toJSON());
+
+        return '';
+    }
+}
 
 async function createMintApiCall(
     userAddress: string,
@@ -10,8 +55,8 @@ async function createMintApiCall(
         const mintNftRequest: CeloMintErc721 = {
             chain: Currency.CELO,
             feeCurrency: Currency.CELO,
-            // tokenId: '1',
-            // contractAddress: MAIN_CONTRACT_ADDRESS,
+            tokenId: '1',
+            contractAddress: TATUM_CUSTOM_CONTRACT_ADDRESS,
             to: userAddress,
             url: ipfsHash,
         };
@@ -23,14 +68,15 @@ async function createMintApiCall(
             },
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': PAID_API_KEY,
+                    'Content-Type': 'application/json',
                 },
             },
         );
 
-        const {signatureId} = response.data;
+        const {txId} = response.data;
 
-        return signatureId;
+        return txId;
     } catch (err) {
         console.log('ERRO createMintApiCall: ', err);
         return '';
@@ -42,6 +88,12 @@ async function mintNFT(
     ipfsHash: string,
 ): Promise<string> {
     const transactionHash = await createMintApiCall(accountAddress, ipfsHash);
+
+    // this method mints an NFT in our deployed smart contract, but since we didn't had a paid plan, this couldn't be achieved
+    /* const transactionHash = await mintNFTCustomContract(
+        accountAddress,
+        ipfsHash,
+    ); */
     return transactionHash;
 }
 
