@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
     },
     scrollContainer: {
-        backgroundColor: '#e7a61a',
+        backgroundColor: '#3294CD',
     },
     mainContainer: {
         paddingHorizontal: 24,

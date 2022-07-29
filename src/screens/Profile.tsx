@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         marginBottom: 32,
     },
     mainContainer: {
-        backgroundColor: '#e7a61a',
+        backgroundColor: '#3294CD',
         paddingHorizontal: 24,
     },
     insideContainer: {
