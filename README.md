@@ -4,6 +4,14 @@ A mobile app that allows users to mint NFTs on Celo, using NFT Express.
 
 The project uses NFTExpress and other methods available on Tatum, that permit for example the listing of NFTs a address has in a contract.
 
+## Introduction
+
+The NFTDDancing app allows the users to mint video NFTs with dance moves. It is divided in two major sections.
+
+In the *Create* section, the users can mint new NFTS with their dance moves.
+
+In the *Profile* section, the users can check their minted NFTs and see a details page clicking on the desired NFT.
+
 ## Instalation
 
 Run the following commands by the following order
@@ -31,14 +39,6 @@ To run the app, one must be in the root folder of the project.
 	- `yarn android`
  - iOS
 	- `yarn ios`
-
-## Introduction
-
-The NFTDDancing app allows the users to mint video NFTs with dance moves. It is divided in two major sections.
-
-In the *Create* section, the users can mint new NFTS with their dance moves.
-
-In the *Profile* section, the users can check their minted NFTs and see a details page clicking on the desired NFT.
 
 ## Roadmap
 
