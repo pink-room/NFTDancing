@@ -3,7 +3,7 @@ import axios from 'axios';
 import {ITXConfig} from '../@types/Api';
 import {
     CELO_NFT_MINTER,
-    PAID_API_KEY,
+    API_KEY,
     TATUM_CUSTOM_CONTRACT_ADDRESS,
     SIGNATURE_ID,
 } from '../utils/constants';
@@ -33,7 +33,7 @@ export async function addMinter(): Promise<string> {
             },
             {
                 headers: {
-                    'x-api-key': PAID_API_KEY,
+                    'x-api-key': API_KEY,
                     'Content-Type': 'application/json',
                 },
             },

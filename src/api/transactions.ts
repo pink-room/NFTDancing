@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {ITXConfig} from '../@types/Api';
-import {PAID_API_KEY} from '../utils/constants';
+import {API_KEY} from '../utils/constants';
 
 async function getTXConfig(
     signatureId: string,
@@ -11,7 +11,7 @@ async function getTXConfig(
             'https://api-eu1.tatum.io/v3/kms/' + signatureId,
             {
                 headers: {
-                    'x-api-key': PAID_API_KEY,
+                    'x-api-key': API_KEY,
                 },
             },
         );

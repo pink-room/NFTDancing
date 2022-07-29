@@ -1,7 +1,4 @@
-// export const API_KEY = 'cc940288-44fb-4414-9d52-afe757ff10ca';
-// export const PAID_API_KEY = '474c5a9b-268a-42d1-8864-22928299b945_100';
-
-export const PAID_API_KEY = 'cc940288-44fb-4414-9d52-afe757ff10ca';
+export const API_KEY = 'cc940288-44fb-4414-9d52-afe757ff10ca';
 
 // THIS CAN REALLY BE ANYTHING
 export const SIGNATURE_ID = 'b7ab52f4-d826-4db5-8a52-4f492935a7b4';
