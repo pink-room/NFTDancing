@@ -4,6 +4,8 @@ A mobile app that allows users to mint NFTs on Celo, using NFT Express.
 
 The project uses NFTExpress and other methods available on Tatum, that permit for example the listing of NFTs a address has in a contract.
 
+You can see a demo [here](https://drive.google.com/file/d/11m5dv6fsqsiTP9brRiVJnL5mn3dnKbOW/view?usp=sharing).
+
 ## Introduction
 
 The NFTDDancing app allows the users to mint video NFTs with dance moves. It is divided in two major sections.
@@ -54,3 +56,11 @@ The following steps for the project are:
 The project is not audited and should not be used in production. 
 
 The app is a submission for a [Gitcoin Bounty](https://gitcoin.co/issue/28659).
+
+## Screenshots
+
+![ConnectWallet](/screenshots/ConnectWallet.png "Connect Wallet")
+
+![CreateNFT](/screenshots/CreateNFT.png "Create NFT")
+
+![ListNFTs](/screenshots/ListNFTs.png "List NFTs")
