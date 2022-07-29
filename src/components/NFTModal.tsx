@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
         padding: 24,
-        backgroundColor: '#e7a61a',
+        backgroundColor: '#3294CD',
     },
     closeButton: {
         position: 'absolute',

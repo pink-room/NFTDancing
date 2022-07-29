@@ -14,11 +14,16 @@ export default function Authenticate() {
                     Dance NFT Marketplace
                 </Text>
             </View>
-            <TouchableOpacity
-                onPress={authState.actions.connectWallet}
-                style={styles.buttonStyle}>
-                <Text style={styles.buttonTextStyle}>Connect your Wallet</Text>
-            </TouchableOpacity>
+
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={authState.actions.connectWallet}
+                    style={styles.buttonStyle}>
+                    <Text style={styles.buttonTextStyle}>
+                        Connect your Wallet
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -27,23 +32,27 @@ const styles = StyleSheet.create({
     bold: {
         fontWeight: '700',
     },
+    buttonContainer: {
+        width: '100%',
+        position: 'absolute',
+        bottom: 128,
+        left: 48,
+    },
     mainContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#e7a61a',
+        backgroundColor: '#3294CD',
+        padding: 48,
     },
     content: {
-        maxWidth: 250,
+        marginTop: 48,
     },
     title: {
         color: '#ffffff',
         fontSize: 24,
-        textAlign: 'center',
     },
     buttonStyle: {
-        paddingVertical: 6,
-        paddingHorizontal: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
         borderColor: '#ffffff',
         borderRadius: 8,
         borderWidth: 2,
@@ -53,5 +62,6 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 20,
         fontWeight: '500',
+        textAlign: 'center',
     },
 });
