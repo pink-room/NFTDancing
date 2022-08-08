@@ -53,58 +53,60 @@ export default function Home() {
     };
 
     return (
-        <ScrollView style={styles.scrollContainer}>
-            <View style={styles.mainContainer}>
-                {web3State.values.loading ? (
+        <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.scrollContentContainer}>
+            {!web3State.values.loading ? (
+                <View style={styles.activityIndicator}>
                     <ActivityIndicator />
-                ) : (
-                    <>
-                        <Text style={[styles.text, styles.title]}>
-                            Create your own Dance NFT!
+                </View>
+            ) : (
+                <View style={styles.mainContainer}>
+                    <Text style={[styles.text, styles.title]}>
+                        Create your own Dance NFT!
+                    </Text>
+
+                    <Text style={[styles.inputLabel]}>Name of The NFT</Text>
+                    <TextInput
+                        style={[styles.input, styles.inputText]}
+                        onChangeText={setName}
+                        value={name}
+                        placeholder="NFT Placeholder"
+                    />
+
+                    <Text style={[styles.inputLabel]}>Description</Text>
+                    <TextInput
+                        style={[styles.inputDescription, styles.input]}
+                        onChangeText={setDescription}
+                        value={description}
+                        placeholder="Description"
+                        multiline
+                        numberOfLines={5}
+                    />
+
+                    <Text style={[styles.inputLabel]}>Video to Upload</Text>
+                    <TouchableOpacity onPress={handleUploadVideo}>
+                        <Text
+                            style={
+                                video
+                                    ? [styles.text, styles.input]
+                                    : styles.input
+                            }>
+                            {video ? video.name : 'Select Video'}
                         </Text>
+                        <Text style={[styles.text, styles.label]}>
+                            It should not be greater than 35MB
+                        </Text>
+                    </TouchableOpacity>
 
-                        <Text style={[styles.inputLabel]}>Name of The NFT</Text>
-                        <TextInput
-                            style={[styles.input, styles.inputText]}
-                            onChangeText={setName}
-                            value={name}
-                            placeholder="NFT Placeholder"
-                        />
-
-                        <Text style={[styles.inputLabel]}>Description</Text>
-                        <TextInput
-                            style={[styles.inputDescription, styles.input]}
-                            onChangeText={setDescription}
-                            value={description}
-                            placeholder="Description"
-                            multiline
-                            numberOfLines={5}
-                        />
-
-                        <Text style={[styles.inputLabel]}>Video to Upload</Text>
-                        <TouchableOpacity onPress={handleUploadVideo}>
-                            <Text
-                                style={
-                                    video
-                                        ? [styles.text, styles.input]
-                                        : styles.input
-                                }>
-                                {video ? video.name : 'Select Video'}
-                            </Text>
-                            <Text style={[styles.text, styles.label]}>
-                                It should not be greater than 35MB
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            disabled={video == null}
-                            style={styles.buttonStyle}
-                            onPress={handleMintNFT}>
-                            <Text style={styles.buttonTextStyle}>Mint NFT</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
-            </View>
+                    <TouchableOpacity
+                        disabled={video == null}
+                        style={styles.buttonStyle}
+                        onPress={handleMintNFT}>
+                        <Text style={styles.buttonTextStyle}>Mint NFT</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </ScrollView>
     );
 }
@@ -131,6 +133,9 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         backgroundColor: '#3294CD',
+    },
+    scrollContentContainer: {
+        flex: 1,
     },
     mainContainer: {
         paddingHorizontal: 24,
@@ -170,5 +175,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '700',
         textAlign: 'center',
+    },
+    activityIndicator: {
+        top: '50%',
+        backgroundColor: 'red',
     },
 });
