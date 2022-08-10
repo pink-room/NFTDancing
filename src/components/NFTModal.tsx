@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Modal, View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+    Modal,
+    View,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
 
 import {useWeb3State} from '../contexts/Web3Context';
 
@@ -46,7 +53,7 @@ export default function NFTModal({
                 <Text style={styles.name}>{nft?.name}</Text>
                 <Text style={styles.description}>{nft?.description}</Text>
 
-                {videoLocation && (
+                {videoLocation ? (
                     <View style={styles.videoContainer}>
                         <Video
                             source={{uri: videoLocation}}
@@ -54,6 +61,8 @@ export default function NFTModal({
                             controls={true}
                         />
                     </View>
+                ) : (
+                    <ActivityIndicator style={styles.activityIndicator} />
                 )}
 
                 <TouchableOpacity
@@ -99,5 +108,8 @@ const styles = StyleSheet.create({
     },
     videoContainer: {
         alignItems: 'center',
+    },
+    activityIndicator: {
+        top: '35%',
     },
 });
