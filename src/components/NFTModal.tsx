@@ -41,6 +41,7 @@ export default function NFTModal({
         };
 
         loadFromIpfs();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

@@ -20,7 +20,7 @@ async function getTXConfig(
         txConfig = prepareTxConfig(txConfig, address);
 
         return txConfig;
-    } catch (err) {
+    } catch (err: any) {
         console.log('ERRO getTXConfig: ');
         console.log(err.toJSON());
         return null;
@@ -43,7 +43,7 @@ async function sendTransaction(
     try {
         const transactionHash = await connector.sendTransaction(data);
         return transactionHash;
-    } catch (err) {
+    } catch (err: any) {
         console.log('Error signing transaction: ');
         console.log(err.toJSON());
         return '';

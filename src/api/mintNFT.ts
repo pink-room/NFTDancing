@@ -37,7 +37,7 @@ async function mintNFTCustomContract(
         const {txId} = response.data;
 
         return txId;
-    } catch (err) {
+    } catch (err: any) {
         console.log('ERRO mintNFTCustomContract');
         console.log(err.toJSON());
 
