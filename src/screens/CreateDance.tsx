@@ -56,7 +56,7 @@ export default function Home() {
         <ScrollView
             style={styles.scrollContainer}
             contentContainerStyle={styles.scrollContentContainer}>
-            {!web3State.values.loading ? (
+            {web3State.values.loading ? (
                 <View style={styles.activityIndicator}>
                     <ActivityIndicator />
                 </View>
@@ -178,6 +178,5 @@ const styles = StyleSheet.create({
     },
     activityIndicator: {
         top: '50%',
-        backgroundColor: 'red',
     },
 });
