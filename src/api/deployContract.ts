@@ -31,7 +31,7 @@ async function createContractApiCall(): Promise<string> {
         const {signatureId} = response.data;
 
         return signatureId;
-    } catch (err) {
+    } catch (err: any) {
         console.log('ERRO createContractApiCall: ');
         console.log(err.toJSON());
         return '';
