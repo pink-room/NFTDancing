@@ -1,7 +1,6 @@
 import {IMetadata} from './../@types/NFT';
 import {PINATA_API_KEY, PINATA_API_SECRET} from '../utils/constants';
 import axios from 'axios';
-import {IIPFSResponse} from './@types/IPFSResponse';
 
 export async function uploadToVideoIPFS(data: FormData): Promise<string> {
     const response = await axios.post(
