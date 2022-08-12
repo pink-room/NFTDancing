@@ -2,7 +2,21 @@ import {Currency} from '@tatumio/tatum';
 import {TATUM_API_KEY} from '../utils/constants';
 import axios from 'axios';
 import {INFTResponse} from './@types/NFTResponse';
-import {retrieveFromIPFS} from './ipfs';
+
+function handleParseMetadata(metadata: any) {
+    return metadata.map((itemMetadata: any) => {
+        return {
+            url: itemMetadata.url,
+            metadata:
+                itemMetadata.metadata != null
+                    ? itemMetadata.metadata.name != null
+                        ? itemMetadata.metadata
+                        : JSON.parse(Object.keys(itemMetadata.metadata)[0])
+                    : {name: '321', description: '321', video: '321'},
+            tokenId: itemMetadata.tokenId,
+        };
+    });
+}
 
 // Code that we didn't used, because we couldn't deploy and mint in our custom Smart Contract
 /* export async function listAllNFT() {
@@ -46,5 +60,5 @@ export async function listMyNFT(
         },
     );
 
-    return response.data[0].metadata;
+    return handleParseMetadata(response.data[0].metadata);
 }
