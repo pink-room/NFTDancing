@@ -1,6 +1,6 @@
 import {Currency} from '@tatumio/tatum';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {TATUM_CUSTOM_CONTRACT_ADDRESS, API_KEY} from '../utils/constants';
+import {TATUM_API_KEY} from '../utils/constants';
 import axios from 'axios';
 import {INFTResponse} from './@types/NFTResponse';
 
@@ -21,7 +21,7 @@ import {INFTResponse} from './@types/NFTResponse';
             `https://api-eu1.tatum.io/v3/nft/collection/${listNFTRequest.chain}/${listNFTRequest.address}?${query}`,
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                 },
             },
         );
@@ -41,7 +41,7 @@ export async function listMyNFT(
         `https://api-eu1.tatum.io/v3/nft/address/balance/${requestData.chain}/${accountAddress}`,
         {
             headers: {
-                'x-api-key': API_KEY,
+                'x-api-key': TATUM_API_KEY,
             },
         },
     );
