@@ -16,12 +16,22 @@ export default function NFT({nft}: NFTProps) {
         return trimmedDescription + '...';
     };
 
+    const metadata =
+        nft.metadata != null
+            ? nft.metadata.name! != null
+                ? nft.metadata
+                : JSON.parse(Object.keys(nft.metadata)[0])
+            : null;
+    console.log(metadata);
+
     return (
         <View style={styles.nftContainer}>
-            {nft.metadata != null && (
+            {metadata != null && (
                 <>
-                    <Text style={styles.name}>{nft.metadata.name}</Text>
-                    <Text>{shortenDescription(nft.metadata.description)}</Text>
+                    <Text style={styles.name}>{metadata.name || ''}</Text>
+                    <Text>
+                        {shortenDescription(metadata.description || '')}
+                    </Text>
                 </>
             )}
         </View>

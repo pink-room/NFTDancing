@@ -1,8 +1,8 @@
 import {Currency} from '@tatumio/tatum';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {TATUM_API_KEY} from '../utils/constants';
 import axios from 'axios';
 import {INFTResponse} from './@types/NFTResponse';
+import {retrieveFromIPFS} from './ipfs';
 
 // Code that we didn't used, because we couldn't deploy and mint in our custom Smart Contract
 /* export async function listAllNFT() {

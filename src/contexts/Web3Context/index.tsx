@@ -71,7 +71,7 @@ function Web3ContextProvider({
             const metadataHash = await uploadToJSONIPFS(metadata);
 
             setLoading(false);
-            return `ipfs://${metadataHash}`;
+            return metadataHash;
         } catch (err) {
             console.log('Error uploading to ipfs', err);
         }
@@ -84,15 +84,12 @@ function Web3ContextProvider({
         try {
             const ipfsRetrieve = await retrieveFromIPFS(ipfsHash);
 
-            // const filePath = RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`;
+            const filePath = RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`;
 
-            // await RNFS.writeFile(filePath, ipfsRetrieve, 'base64');
-
-            console.log(ipfsRetrieve);
+            await RNFS.writeFile(filePath, ipfsRetrieve, 'base64');
 
             setLoading(false);
-            return '';
-            // return filePath;
+            return filePath;
         } catch (err) {
             console.log('Error retrieving from ipfs', err);
         }

@@ -38,7 +38,5 @@ export async function retrieveFromIPFS(ipfsHash: string) {
         `https://gateway.pinata.cloud/ipfs/${ipfsHash}`,
     );
 
-    console.log(response);
-
     return response.data;
 }

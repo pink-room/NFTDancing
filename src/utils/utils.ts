@@ -9,9 +9,9 @@ export function trimIpfsHash(ipfsHash: string): string {
 
 export function extractNFT(nftResponse: INFTResponse): IMetadata {
     const nft: IMetadata = {
-        name: nftResponse.metadata.name,
-        description: nftResponse.metadata.description,
-        video: nftResponse.metadata.video,
+        name: nftResponse?.metadata?.name || '',
+        description: nftResponse?.metadata?.description || '',
+        video: nftResponse?.metadata?.video || '',
     };
     return nft;
 }
