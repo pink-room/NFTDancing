@@ -12,7 +12,7 @@ function handleParseMetadata(metadata: any) {
                     ? itemMetadata.metadata.name != null
                         ? itemMetadata.metadata
                         : JSON.parse(Object.keys(itemMetadata.metadata)[0])
-                    : {name: '321', description: '321', video: '321'},
+                    : {name: '-', description: '-', video: ''},
             tokenId: itemMetadata.tokenId,
         };
     });
