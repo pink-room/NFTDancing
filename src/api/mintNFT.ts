@@ -1,6 +1,6 @@
 import {CeloMintErc721, Currency} from '@tatumio/tatum';
 import {
-    API_KEY,
+    TATUM_API_KEY,
     CELO_NFT_MINTER,
     TATUM_CUSTOM_CONTRACT_ADDRESS,
 } from '../utils/constants';
@@ -29,7 +29,7 @@ async function mintNFTCustomContract(
             },
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                     'Content-Type': 'application/json',
                 },
             },
@@ -66,7 +66,7 @@ async function createMintApiCall(
             },
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                     'Content-Type': 'application/json',
                 },
             },

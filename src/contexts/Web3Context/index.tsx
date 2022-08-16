@@ -1,11 +1,10 @@
 import React, {useContext, useState} from 'react';
-import {Alert, Platform} from 'react-native';
+import {Alert} from 'react-native';
 
 import {useAuthState} from '../AuthContext';
 
 import * as DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import IPFS from 'ipfs-mini';
 
 import {
     Web3Provider,
@@ -14,9 +13,12 @@ import {
     Web3ContextInterface,
 } from './context';
 
-import calculateSize from '../../utils/calculateSizeInMB';
 import {mintNFT} from '../../api/mintNFT';
-import {IMetadata} from '../../@types/NFT';
+import {
+    uploadVideoToIPFS,
+    uploadToJSONIPFS,
+    retrieveFromIPFS,
+} from '../../api/ipfs';
 
 function Web3ContextProvider({
     children,
@@ -25,35 +27,7 @@ function Web3ContextProvider({
 }): JSX.Element {
     const authState = useAuthState();
 
-    const ipfs = new IPFS({
-        host: 'ipfs.infura.io',
-        port: 5001,
-        protocol: 'https',
-    });
     const [loading, setLoading] = useState<boolean>(false);
-
-    const uploadObjectToIpfs = async (
-        metadata: IMetadata,
-    ): Promise<string | null> => {
-        const ipfsUpload = await ipfs.addJSON(metadata);
-
-        if (ipfsUpload == null) {
-            console.log('Error uploading to ipfs');
-            return null;
-        }
-
-        return ipfsUpload;
-    };
-
-    const uploadVideoToIPFS = async (videoBase64: string): Promise<string> => {
-        try {
-            const videoIpfsHash = await ipfs.add(videoBase64);
-            return videoIpfsHash;
-        } catch (error) {
-            console.log(error);
-            throw new Error('');
-        }
-    };
 
     // This method will upload the video to IPFS and then upload the metadata info to IPFS
     const uploadToIpfs = async (
@@ -64,46 +38,42 @@ function Web3ContextProvider({
         setLoading(true);
 
         try {
-            const readFile = await RNFS.readFile(
-                Platform.OS === 'ios'
-                    ? encodeURI(fileObject.uri)
-                    : fileObject.uri,
-                'base64',
-            );
-
-            if (readFile != null) {
-                if (calculateSize(readFile) > 50) {
-                    Alert.alert(
-                        'File size is too large. Please select a file less than 35MB',
-                    );
-                    setLoading(false);
-                    return null;
-                }
-
-                const videoIpfsHash = await uploadVideoToIPFS(readFile);
-
-                // const ipfsUpload = await ipfs.add(readFile);
-
-                if (videoIpfsHash == null) {
-                    console.log('Error uploading video to ipfs');
-                    return null;
-                }
-
-                const metadata = {
-                    name: nftName,
-                    description: nftDescription,
-                    video: videoIpfsHash,
-                };
-
-                const metadataHash = await uploadObjectToIpfs(metadata);
-
+            if (fileObject == null) {
+                Alert.alert('Error loading file. Please try again');
                 setLoading(false);
-                return `ipfs://${metadataHash}`;
+                return null;
             }
+            // 1048576 = 1024 * 1024 = 1MB
+            if (fileObject.size! / 1048576 > 50) {
+                Alert.alert(
+                    'File size is too large. Please select a file less than 35MB',
+                );
+                setLoading(false);
+                return null;
+            }
+
+            const fileFormData = new FormData();
+            fileFormData.append('file', fileObject);
+
+            const videoIpfsHash = await uploadVideoToIPFS(fileFormData);
+
+            if (videoIpfsHash == null) {
+                console.log('Error uploading video to ipfs');
+                return null;
+            }
+
+            const metadata = {
+                name: nftName,
+                description: nftDescription,
+                video: videoIpfsHash,
+            };
+
+            const metadataHash = await uploadToJSONIPFS(metadata);
+
+            setLoading(false);
+            return metadataHash;
         } catch (err) {
-            if (!DocumentPicker.isCancel(err)) {
-                console.log('Error uploading to ipfs', err);
-            }
+            console.log('Error uploading to ipfs', err);
         }
         setLoading(false);
         return null;
@@ -111,10 +81,12 @@ function Web3ContextProvider({
 
     const retrieveFromIpfs = async (ipfsHash: string) => {
         setLoading(true);
+        const slicedIpfsHash = ipfsHash.slice(7);
         try {
-            const ipfsRetrieve = await ipfs.cat(ipfsHash);
+            const ipfsRetrieve = await retrieveFromIPFS(slicedIpfsHash);
 
-            const filePath = RNFS.DocumentDirectoryPath + `/${ipfsHash}.mp4`;
+            const filePath =
+                RNFS.DocumentDirectoryPath + `/${slicedIpfsHash}.mp4`;
 
             await RNFS.writeFile(filePath, ipfsRetrieve, 'base64');
 
@@ -141,7 +113,6 @@ function Web3ContextProvider({
                     loading,
                 },
                 actions: {
-                    uploadObjectToIpfs,
                     uploadToIpfs,
                     retrieveFromIpfs,
                     mintDanceNFT,

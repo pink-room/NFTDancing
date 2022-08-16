@@ -1,7 +1,7 @@
 import {CeloDeployErc721, Currency} from '@tatumio/tatum';
 import {SIGNATURE_ID} from '../utils/constants';
 import axios from 'axios';
-import {API_KEY} from '../utils/constants';
+import {TATUM_API_KEY} from '../utils/constants';
 import {ITXConfig} from '../@types/Api';
 import timeout from '../utils/timeout';
 import {getTXConfig, sendTransaction} from './transactions';
@@ -23,7 +23,7 @@ async function createContractApiCall(): Promise<string> {
             },
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                 },
             },
         );
@@ -44,7 +44,7 @@ async function getContractAddress(hash: string): Promise<string> {
             'https://api-eu1.tatum.io/v3/blockchain/sc/address/CELO/' + hash,
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                 },
             },
         );

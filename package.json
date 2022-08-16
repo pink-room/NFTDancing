@@ -26,7 +26,6 @@
     "buffer": "^6.0.3",
     "events": "^3.3.0",
     "https-browserify": "~0.0.0",
-    "ipfs-mini": "pink-room/ipfs-mini",
     "path-browserify": "0.0.0",
     "react": "18.0.0",
     "react-native": "0.69.1",

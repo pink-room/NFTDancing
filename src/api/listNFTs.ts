@@ -1,8 +1,22 @@
 import {Currency} from '@tatumio/tatum';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {TATUM_CUSTOM_CONTRACT_ADDRESS, API_KEY} from '../utils/constants';
+import {TATUM_API_KEY} from '../utils/constants';
 import axios from 'axios';
 import {INFTResponse} from './@types/NFTResponse';
+
+function handleParseMetadata(metadata: any) {
+    return metadata.map((itemMetadata: any) => {
+        return {
+            url: itemMetadata.url,
+            metadata:
+                itemMetadata.metadata != null
+                    ? itemMetadata.metadata.name != null
+                        ? itemMetadata.metadata
+                        : JSON.parse(Object.keys(itemMetadata.metadata)[0])
+                    : {name: '', description: '', video: ''},
+            tokenId: itemMetadata.tokenId,
+        };
+    });
+}
 
 // Code that we didn't used, because we couldn't deploy and mint in our custom Smart Contract
 /* export async function listAllNFT() {
@@ -21,7 +35,7 @@ import {INFTResponse} from './@types/NFTResponse';
             `https://api-eu1.tatum.io/v3/nft/collection/${listNFTRequest.chain}/${listNFTRequest.address}?${query}`,
             {
                 headers: {
-                    'x-api-key': API_KEY,
+                    'x-api-key': TATUM_API_KEY,
                 },
             },
         );
@@ -41,10 +55,10 @@ export async function listMyNFT(
         `https://api-eu1.tatum.io/v3/nft/address/balance/${requestData.chain}/${accountAddress}`,
         {
             headers: {
-                'x-api-key': API_KEY,
+                'x-api-key': TATUM_API_KEY,
             },
         },
     );
 
-    return response.data[0].metadata;
+    return handleParseMetadata(response.data[0].metadata);
 }

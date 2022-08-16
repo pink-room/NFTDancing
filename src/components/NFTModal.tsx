@@ -26,10 +26,12 @@ export default function NFTModal({
 }: NFTModalProps) {
     const web3State = useWeb3State();
     const [videoLocation, setVideoLocation] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const loadFromIpfs = async () => {
             if (nft) {
+                setLoading(true);
                 const fileLocation = await web3State.actions.retrieveFromIpfs(
                     nft.video,
                 );
@@ -37,6 +39,7 @@ export default function NFTModal({
                 if (fileLocation !== null) {
                     setVideoLocation(fileLocation);
                 }
+                setLoading(false);
             }
         };
 
@@ -62,8 +65,12 @@ export default function NFTModal({
                             controls={true}
                         />
                     </View>
-                ) : (
+                ) : loading ? (
                     <ActivityIndicator style={styles.activityIndicator} />
+                ) : (
+                    <Text>
+                        Could not retrieve video. Please try again later.
+                    </Text>
                 )}
 
                 <TouchableOpacity
