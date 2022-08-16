@@ -15,7 +15,7 @@ import {
 
 import {mintNFT} from '../../api/mintNFT';
 import {
-    uploadToVideoIPFS,
+    uploadVideoToIPFS,
     uploadToJSONIPFS,
     retrieveFromIPFS,
 } from '../../api/ipfs';
@@ -55,7 +55,7 @@ function Web3ContextProvider({
             const fileFormData = new FormData();
             fileFormData.append('file', fileObject);
 
-            const videoIpfsHash = await uploadToVideoIPFS(fileFormData);
+            const videoIpfsHash = await uploadVideoToIPFS(fileFormData);
 
             if (videoIpfsHash == null) {
                 console.log('Error uploading video to ipfs');

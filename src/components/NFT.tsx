@@ -20,10 +20,8 @@ export default function NFT({nft}: NFTProps) {
         <View style={styles.nftContainer}>
             {nft.metadata != null && (
                 <>
-                    <Text style={styles.name}>{nft.metadata.name || ''}</Text>
-                    <Text>
-                        {shortenDescription(nft.metadata.description || '')}
-                    </Text>
+                    <Text style={styles.name}>{nft.metadata.name}</Text>
+                    <Text>{shortenDescription(nft.metadata.description)}</Text>
                 </>
             )}
         </View>
