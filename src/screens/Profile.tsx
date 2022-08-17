@@ -12,9 +12,9 @@ import {useAuthState} from '../contexts/AuthContext';
 import {useIsFocused} from '@react-navigation/native';
 import NFTModal from '../components/NFTModal';
 import NFT from '../components/NFT';
-import {INFTResponse} from '../api/@types/NFTResponse';
 import {extractNFT} from '../utils/utils';
 import {IMetadata} from '../@types/NFT';
+import {INFTResponse} from '../@types/NFTResponse';
 
 export default function Profile() {
     const [nfts, setNfts] = useState<INFTResponse[]>();

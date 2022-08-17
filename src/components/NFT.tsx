@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
-import {INFTResponse} from '../api/@types/NFTResponse';
+import {INFTResponse} from '../@types/NFTResponse';
 
 interface NFTProps {
     nft: INFTResponse;

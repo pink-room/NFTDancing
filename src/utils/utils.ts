@@ -1,5 +1,5 @@
 import {IMetadata} from '../@types/NFT';
-import {INFTResponse} from '../api/@types/NFTResponse';
+import {INFTResponse} from '../@types/NFTResponse';
 
 export function trimIpfsHash(ipfsHash: string): string {
     // trim the hash to the right format

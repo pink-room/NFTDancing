@@ -1,7 +1,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {INFTResponse} from '../api/@types/NFTResponse';
+import {INFTResponse} from '../@types/NFTResponse';
 import {queryTheGraph} from '../api/thegraph';
 import NFT from '../components/NFT';
 import {useAuthState} from '../contexts/AuthContext';

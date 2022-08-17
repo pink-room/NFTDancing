@@ -1,7 +1,7 @@
 import {Currency} from '@tatumio/tatum';
 import {TATUM_API_KEY} from '../utils/constants';
 import axios from 'axios';
-import {INFTResponse} from './@types/NFTResponse';
+import {INFTResponse} from '../@types/NFTResponse';
 
 function handleParseMetadata(metadata: any) {
     return metadata.map((itemMetadata: any) => {
