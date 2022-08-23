@@ -1,13 +1,11 @@
 import * as React from 'react';
 import * as DocumentPicker from 'react-native-document-picker';
-import {IMetadata} from '../../@types/NFT';
 
 export interface Web3ContextInterface {
     values: {
         loading: boolean;
     };
     actions: {
-        uploadObjectToIpfs: (metadata: IMetadata) => Promise<string | null>;
         uploadToIpfs: (
             fileObject: DocumentPicker.DocumentPickerResponse,
             nftName: string,
