@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {Alert} from 'react-native';
 
 import {useAuthState} from '../AuthContext';
+import {useIPFSState} from '../IPFSContext';
 
 import * as DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
@@ -14,11 +15,6 @@ import {
 } from './context';
 
 import {mintNFT} from '../../api/mintNFT';
-import {
-    uploadVideoToIPFS,
-    uploadToJSONIPFS,
-    retrieveFromIPFS,
-} from '../../api/ipfs';
 
 function Web3ContextProvider({
     children,
@@ -26,6 +22,7 @@ function Web3ContextProvider({
     children: JSX.Element | JSX.Element[];
 }): JSX.Element {
     const authState = useAuthState();
+    const IPFSState = useIPFSState();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -52,10 +49,11 @@ function Web3ContextProvider({
                 return null;
             }
 
-            const fileFormData = new FormData();
-            fileFormData.append('file', fileObject);
-
-            const videoIpfsHash = await uploadVideoToIPFS(fileFormData);
+            const videoIpfsHash = await IPFSState.values.client.add(fileObject);
+            console.log(
+                '🚀 ~ file: index.tsx ~ line 53 ~ videoIpfsHash',
+                videoIpfsHash,
+            );
 
             if (videoIpfsHash == null) {
                 console.log('Error uploading video to ipfs');
@@ -68,7 +66,11 @@ function Web3ContextProvider({
                 video: videoIpfsHash,
             };
 
-            const metadataHash = await uploadToJSONIPFS(metadata);
+            const metadataHash = await IPFSState.values.client.add(metadata);
+            console.log(
+                '🚀 ~ file: index.tsx ~ line 70 ~ metadataHash',
+                metadataHash,
+            );
 
             setLoading(false);
             return metadataHash;
@@ -83,7 +85,16 @@ function Web3ContextProvider({
         setLoading(true);
         const slicedIpfsHash = ipfsHash.slice(7);
         try {
-            const ipfsRetrieve = await retrieveFromIPFS(slicedIpfsHash);
+            // const ipfsRetrieve = await IPFSState.values.client.cat(
+            //     slicedIpfsHash,
+            // );
+            const ipfsRetrieve = await IPFSState.values.client.get(
+                slicedIpfsHash,
+            );
+            console.log(
+                '🚀 ~ file: index.tsx ~ line 94 ~ retrieveFromIpfs ~ ipfsRetrieve',
+                ipfsRetrieve,
+            );
 
             const filePath =
                 RNFS.DocumentDirectoryPath + `/${slicedIpfsHash}.mp4`;

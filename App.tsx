@@ -3,6 +3,7 @@ import {LogBox} from 'react-native';
 
 import {AuthContextProvider} from './src/contexts/AuthContext';
 import {Web3ContextProvider} from './src/contexts/Web3Context';
+import {IPFSContextProvider} from './src/contexts/IPFSContext';
 
 import Routes from './src/routes';
 
@@ -17,11 +18,13 @@ function App() {
     }, []);
 
     return (
-        <AuthContextProvider>
-            <Web3ContextProvider>
-                <Routes />
-            </Web3ContextProvider>
-        </AuthContextProvider>
+        <IPFSContextProvider>
+            <AuthContextProvider>
+                <Web3ContextProvider>
+                    <Routes />
+                </Web3ContextProvider>
+            </AuthContextProvider>
+        </IPFSContextProvider>
     );
 }
 

@@ -1,7 +1,4 @@
 export const TATUM_API_KEY = 'cc940288-44fb-4414-9d52-afe757ff10ca';
-export const PINATA_API_KEY = 'cbb83f28efc6be9a93f9';
-export const PINATA_API_SECRET =
-    '51451ec08fce0c174ab0dddd495b7234d3e3f2c6e495900c172d1d6a5bbad099';
 
 // THIS CAN REALLY BE ANYTHING
 export const SIGNATURE_ID = 'b7ab52f4-d826-4db5-8a52-4f492935a7b4';
